@@ -148,13 +148,13 @@ function submitIpad(e) {
   var intent = fd.get('ramp_intent');
 
   var payload = {
-    _subject: '\ud83c\udfc6 NEW iPad GIVEAWAY ENTRY: ' + (fd.get('name') || ''),
+    _subject: '\ud83c\udfae NEW PS1 GIVEAWAY ENTRY: ' + (fd.get('name') || ''),
     name: fd.get('name'),
     email: fd.get('email'),
     company: fd.get('company'),
     role: fd.get('role'),
     ramp_intent: intent,
-    source: 'ramp2000_ipad_giveaway',
+    source: 'ramp2000_ps1_giveaway',
     submitted_at: new Date().toISOString()
   };
 
@@ -171,7 +171,7 @@ function submitIpad(e) {
 
   // Redirect to Ramp w/ giveaway UTM after 2.5s if they said yes
   setTimeout(function () {
-    var rampUrl = REFERRAL_BASE + '&utm_source=ramp2000&utm_medium=ipad_giveaway&utm_campaign=y2k_ipad_giveaway';
+    var rampUrl = REFERRAL_BASE + '&utm_source=ramp2000&utm_medium=ps1_giveaway&utm_campaign=y2k_ps1_giveaway';
     if (intent === 'yes_signup_now') {
       window.open(rampUrl, '_blank');
     }
