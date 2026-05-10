@@ -541,17 +541,50 @@ input[type="email"] {
   .nav-table td { flex: 1 1 33%; }
   .nav-btn { font-size: 10px; padding: 4px 2px; }
 
-  /* MAIN LAYOUT — stack the 3 columns vertically */
-  .main-table tr,
-  .main-table tbody { display: block; }
-  .main-table > tbody > tr > td,
-  .main-table > tr > td {
-    display: block !important;
-    width: 100% !important;
-    box-sizing: border-box;
+  /* MAIN LAYOUT — flatten 3 columns into ONE ordered stream so PS1, poll, etc. can interleave with center sections */
+  .main-table { display: block; }
+  .main-table > tbody { display: flex; flex-direction: column; }
+  .main-table > tbody > tr { display: flex; flex-direction: column; width: 100%; }
+  /* display:contents on the td cells makes their children become flex children of the <tr> */
+  .main-table > tbody > tr > td {
+    display: contents;
   }
-  .side-col { width: 100% !important; padding: 8px 4px; }
-  .center-col { padding: 6px 4px; }
+  /* All flow children get layout reset; default order via the unscoped .m-ord-* rules below */
+  .main-table > tbody > tr > td > * { width: 100%; box-sizing: border-box; }
+  /* Untagged children default to order:50 (between hero/game and footer) */
+  .main-table > tbody > tr > td > *:not([class*="m-ord-"]) { order: 50; }
+  /* Background fills for the sidebar regions don't apply anymore — add a subtle wrapper bg via the boxes themselves */
+  .side-box { margin: 6px 4px; }
+  .center-col > * { margin-left: 4px; margin-right: 4px; }
+
+  /* Generated order classes — lower number = closer to top of mobile view. Use !important to defeat the td-children default. */
+  .m-ord-0  { order: 0 !important; }
+  .m-ord-5  { order: 5  !important; }
+  .m-ord-15 { order: 15 !important; }
+  .m-ord-20 { order: 20 !important; }
+  .m-ord-25 { order: 25 !important; }
+  .m-ord-28 { order: 28 !important; }
+  .m-ord-30 { order: 30 !important; }
+  .m-ord-32 { order: 32 !important; }
+  .m-ord-35 { order: 35 !important; }
+  .m-ord-40 { order: 40 !important; }
+  .m-ord-45 { order: 45 !important; }
+  .m-ord-48 { order: 48 !important; }
+  .m-ord-50 { order: 50 !important; }
+  .m-ord-55 { order: 55 !important; }
+  .m-ord-60 { order: 60 !important; }
+  .m-ord-70 { order: 70 !important; }
+  .m-ord-75 { order: 75 !important; }
+  .m-ord-80 { order: 80 !important; }
+  .m-ord-85 { order: 85 !important; }
+  .m-ord-88 { order: 88 !important; }
+  .m-ord-90 { order: 90 !important; }
+  .m-ord-91 { order: 91 !important; }
+  .m-ord-92 { order: 92 !important; }
+  .m-ord-95 { order: 95 !important; }
+  .m-ord-96 { order: 96 !important; }
+  .m-ord-97 { order: 97 !important; }
+  .m-ord-98 { order: 98 !important; }
 
   /* Hero — shrink the giant rainbow */
   .rainbow-text { font-size: 32px; letter-spacing: -1px; }
