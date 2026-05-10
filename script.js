@@ -142,78 +142,148 @@ function escapeHtml(s) {
 
 // (PS1 giveaway form lives on ps1.html — submit handler is inline there.)
 
-// ============ CHAT-ROOM ============
-function openChat() {
-  // If Tawk.to is loaded, open it. Otherwise show a friendly fallback popup.
-  if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
-    try { window.Tawk_API.maximize(); return; } catch (e) {}
-  }
-  // Fallback: show a Y2K-styled "chat" modal that emails Kendall
-  showChatFallback();
+// ============ FAKE LIVE CHAT-ROOM (#ramp-fans) ============
+// Auto-scrolling IRC-style channel populated with paraphrased real Ramp customer
+// testimonials. The user can type a message and a random regular will reply.
+
+var CHAT_MESSAGES = [
+  // Paraphrased / Y2K-ified from real ramp.com/customers testimonials
+  { nick: 'JuliaH_EB',      color: '#ff69b4', text: 'lol obsessed with Ramp. like genuinely.' },
+  { nick: 'JuliaH_EB',      color: '#ff69b4', text: 'tangible value for my finance team AND for me personally. that never happens' },
+  { nick: 'controller_mike', color: '#00ffff', text: 'before ramp our expense process was literally the dark ages' },
+  { nick: 'controller_mike', color: '#00ffff', text: 'we had ppl doing expenses FULL TIME. miserable. nothing integrated. all manual :(' },
+  { nick: 'sarah_H_athletics', color: '#ffff66', text: 'when my teams need something they need it YESTERDAY. ramp gives me time back for the athletes' },
+  { nick: 'kaustubh_VP',    color: '#ff8c00', text: 'closing faster with the automation. couldnt have done it without ramp tbh' },
+  { nick: 'joeH_VPController', color: '#ff00ff', text: 'lean team gang. ramp\'s AI does the manual stuff so we can do strategy' },
+  { nick: 'tim_T&E_payroll', color: '#9999ff', text: 'onboarding was PAINLESS. integrates w/ everything. close goes brrrr' },
+  { nick: 'heidi_BGC_SF',   color: '#33ff99', text: 'used to pay 20k/yr for our AP platform. with ramp we EARN that back. that\'s money for the mission now not back office bs' },
+  { nick: 'mike_foursquare', color: '#ff5050', text: 'chose ramp bc it replaced like 6 disparate tools. if it\'s not in ramp it doesn\'t get paid lol' },
+  { nick: 'shafak_shortcut', color: '#00ff80', text: 'we close our books in ONE HOUR a month. used to take days. i\'m not joking' },
+  { nick: 'rama_Notion',    color: '#cccccc', text: 'ppl ask how we use AI in finance. simple answer: we use ramp.' },
+  { nick: 'lisa_norris',    color: '#ffcc00', text: 'audited thousands of txns in record time. transaction-level granularity is *chef\'s kiss*' },
+  { nick: 'cfo_gillsOnions', color: '#88ff88', text: 'we shaved 20 DAYS off month-end close. twenty. days.' },
+  { nick: 'poshmark_FP&A',  color: '#ff77ff', text: 'hit our free cash flow goal in 7 months instead of 12 \u{1F92F}' },
+  { nick: 'classpass_ops',  color: '#7fffff', text: 'card issuance went from DAYS to 1 day per employee. game changer for hiring' },
+  { nick: 'heyday_FP&A',    color: '#ffaa55', text: '3-5% total savings across ALL spend. literally just from switching to ramp' },
+  { nick: 'candid_finance', code: '#aaaaff', color: '#aaaaff', text: '$250K in savings that ramp\'s insight tool found. money we didn\'t know we were losing' },
+  { nick: 'advisor360_ctrl', color: '#ff9966', text: '$80k+ in savings from cashback + software consolidation. 4x ROI in under a year' },
+  // Y2K reactions / spice
+  { nick: 'CyberCFO_98',    color: '#33ccff', text: 'reimbursement in 1-2 DAYS???? IS THIS REAL?' },
+  { nick: 'spreadsheet_jenny', color: '#ff66cc', text: 'i used to live in netsuite. now i live in ramp. happier. fewer tears.' },
+  { nick: 'AP_andy2000',    color: '#99ff66', text: 'closed the books in 1hr today. went to a yoga class. life is good' },
+  { nick: 'expense_xena',   color: '#ffcc66', text: 'my CEO asked how we automated procurement. i just showed her ramp. she cried (good tears)' },
+  { nick: 'cashback_carl',  color: '#66ffcc', text: 'pulled $40k in cashback last quarter. boss thinks i\'m a wizard' },
+  { nick: 'rampGirl4eva',   color: '#ff99ff', text: 'is it weird to love a software company. asking for a friend (me)' },
+  { nick: 'webmaster',      color: '#ffff00', text: 'lol same' },
+  { nick: 'fp&a_phil',      color: '#88ccff', text: 'bro the policy agent caught 7x more out-of-policy spend than my manual reviews. embarrassing for me honestly' },
+  { nick: 'tax_tammy',      color: '#ff7777', text: 'receipts auto-match to txns. i haven\'t opened a receipt photo in 6 months' },
+  { nick: 'CFO_brenda',     color: '#ccff66', text: 'showed the audit team transaction-level data. they were SHOOK. fastest audit ever' }
+];
+
+var CHAT_REPLIES = [
+  'totally agree',
+  'preach \u{1F64C}',
+  'lol same here',
+  'wait til you try the policy agent',
+  'welcome to the club',
+  'sounds like you need a free demo \u{1F609}',
+  'i felt that in my soul',
+  'huge same energy',
+  'have you tried the cashback dashboard?',
+  'lmaoo so real',
+  'reimbursement in 1-2 days will heal you'
+];
+
+var chatTimer = null;
+var chatIdx = 0;
+
+function appendChatLine(nick, color, text) {
+  var log = document.getElementById('chat-log');
+  if (!log) return;
+  var div = document.createElement('div');
+  var ts = new Date();
+  var hh = String(ts.getHours()).padStart(2,'0');
+  var mm = String(ts.getMinutes()).padStart(2,'0');
+  div.innerHTML = '<span style="color:#666;">[' + hh + ':' + mm + ']</span> ' +
+                  '<b style="color:' + color + ';">&lt;' + nick + '&gt;</b> ' +
+                  '<span style="color:#0f0;">' + escapeHtml(text) + '</span>';
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
 }
 
-function showChatFallback() {
-  if (document.getElementById('chat-fallback')) {
-    document.getElementById('chat-fallback').style.display = 'flex';
-    return;
-  }
-  var modal = document.createElement('div');
-  modal.id = 'chat-fallback';
-  modal.className = 'modal';
-  modal.style.display = 'flex';
-  modal.innerHTML =
-    '<div class="modal-box" style="max-width:480px;">' +
-      '<div class="modal-header"><span>\ud83d\udcac LIVE CHAT-ROOM \u2014 Connecting to webmaster...</span>' +
-      '<a href="#" onclick="event.preventDefault();document.getElementById(\'chat-fallback\').style.display=\'none\';" class="modal-close">[X]</a></div>' +
-      '<div class="modal-body">' +
-        '<div style="background:#000;color:#0f0;font-family:\'Courier New\',monospace;padding:10px;border:2px inset #888;height:160px;overflow:auto;font-size:12px;">' +
-          '<div>&gt; Connecting to chat-room...</div>' +
-          '<div>&gt; <span style="color:#ff0">webmaster@ramp.com</span> has joined the channel.</div>' +
-          '<div>&gt; <b style="color:#0ff">Webmaster:</b> Hey! What\'s on your mind? Drop a message below \u2014 I\'ll get an e-mail and reply directly!</div>' +
-        '</div>' +
-        '<form id="chat-form" onsubmit="return submitChat(event);" style="margin-top:8px;">' +
-          '<table border="0" cellpadding="3" width="100%"><tr>' +
-            '<td><font size="2"><b>Your name:</b></font></td>' +
-            '<td><input type="text" name="name" required size="20" placeholder="Your handle"></td>' +
-          '</tr><tr>' +
-            '<td><font size="2"><b>Your e-mail:</b></font></td>' +
-            '<td><input type="email" name="email" required size="20" placeholder="you@somewhere.com"></td>' +
-          '</tr><tr>' +
-            '<td valign="top"><font size="2"><b>Message:</b></font></td>' +
-            '<td><textarea name="msg" required rows="3" cols="40" placeholder="Type your message..."></textarea></td>' +
-          '</tr></table>' +
-          '<div align="center" style="margin-top:6px;"><input type="submit" value=" SEND \u00BB "></div>' +
-        '</form>' +
-        '<div id="chat-thanks" style="display:none;text-align:center;padding:12px;">' +
-          '<font color="#008000" size="3"><b>\u2728 Sent! Webmaster will reply by e-mail. \u2728</b></font>' +
-        '</div>' +
-      '</div>' +
-    '</div>';
-  document.body.appendChild(modal);
-  modal.addEventListener('click', function (e) {
-    if (e.target === modal) modal.style.display = 'none';
+function appendChatSystem(text) {
+  var log = document.getElementById('chat-log');
+  if (!log) return;
+  var div = document.createElement('div');
+  div.style.color = '#888';
+  div.innerHTML = '&gt; ' + text;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, function(c){
+    return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'})[c];
   });
 }
 
-function submitChat(e) {
-  e.preventDefault();
-  var form = document.getElementById('chat-form');
-  var fd = new FormData(form);
-  var payload = {
-    _subject: '\ud83d\udcac New ramp2000 chat message from ' + (fd.get('name') || ''),
-    name: fd.get('name'),
-    email: fd.get('email'),
-    message: fd.get('msg'),
-    source: 'ramp2000_chat'
-  };
-  fetch(FORMSUBMIT_ENDPOINT, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify(payload)
-  }).catch(function () {});
-  document.getElementById('chat-form').style.display = 'none';
-  document.getElementById('chat-thanks').style.display = 'block';
-  return false;
+function tickChat() {
+  // Pick the next message (cycle, but jitter so it feels organic)
+  if (chatIdx >= CHAT_MESSAGES.length) {
+    // Reshuffle
+    for (var i = CHAT_MESSAGES.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = CHAT_MESSAGES[i]; CHAT_MESSAGES[i] = CHAT_MESSAGES[j]; CHAT_MESSAGES[j] = tmp;
+    }
+    chatIdx = 0;
+  }
+  var m = CHAT_MESSAGES[chatIdx++];
+  appendChatLine(m.nick, m.color, m.text);
+  // Random join/quit noise occasionally
+  if (Math.random() < 0.12) {
+    var fakeNick = ['receipt_rita','procure_pete','ledger_lola','GLAccount_greg','close_carlos'][Math.floor(Math.random()*5)];
+    appendChatSystem('<span style="color:#0ff;">' + fakeNick + '</span> has joined #ramp-fans');
+  }
+  // Schedule next at random interval (2-5s)
+  chatTimer = setTimeout(tickChat, 2000 + Math.random() * 3000);
+}
+
+function sendChatMsg() {
+  var input = document.getElementById('chat-input');
+  if (!input) return;
+  var txt = (input.value || '').trim();
+  if (!txt) return;
+  appendChatLine('you', '#ffffff', txt);
+  input.value = '';
+  // Bot reply after a beat
+  setTimeout(function() {
+    var bot = CHAT_MESSAGES[Math.floor(Math.random() * CHAT_MESSAGES.length)];
+    var reply = CHAT_REPLIES[Math.floor(Math.random() * CHAT_REPLIES.length)];
+    appendChatLine(bot.nick, bot.color, reply);
+  }, 700 + Math.random() * 900);
+}
+
+function initChat() {
+  var log = document.getElementById('chat-log');
+  if (!log) return;
+  // Seed a couple of messages immediately so it feels alive
+  setTimeout(function(){ appendChatLine('JuliaH_EB', '#ff69b4', 'lol obsessed with Ramp. like genuinely.'); }, 600);
+  setTimeout(function(){ appendChatLine('webmaster', '#ffff00', 'welcome to #ramp-fans \u{1F44B} say hi!'); }, 1400);
+  chatIdx = 2;
+  chatTimer = setTimeout(tickChat, 2500);
+  // Enter-to-send
+  var input = document.getElementById('chat-input');
+  if (input) {
+    input.addEventListener('keydown', function(e){
+      if (e.key === 'Enter') { e.preventDefault(); sendChatMsg(); }
+    });
+  }
+}
+
+// Keep old footer/link handlers working: clicking "Chat" now just scrolls to the chat box.
+function openChat() {
+  var el = document.getElementById('chat-log');
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 // ============ WEBRING RANDOM ============
@@ -234,4 +304,6 @@ window.addEventListener('load', function () {
   console.log('%cBest viewed in Netscape Navigator 4.0 at 800x600', 'color:#00ff00;font-family:monospace;');
   // Restore guestbook entries from localStorage
   loadGuestbookEntries();
+  // Boot the fake live chat-room
+  initChat();
 });
