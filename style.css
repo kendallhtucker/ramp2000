@@ -586,6 +586,10 @@ input[type="email"] {
   .m-ord-97 { order: 97 !important; }
   .m-ord-98 { order: 98 !important; }
 
+  /* Game modal status-bar copy: swap desktop → mobile */
+  .sb-desktop { display: none !important; }
+  .sb-mobile  { display: inline !important; }
+
   /* Hero — shrink the giant rainbow */
   .rainbow-text { font-size: 32px; letter-spacing: -1px; }
   .hero-stars { font-size: 16px; letter-spacing: 3px; }

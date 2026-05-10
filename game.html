@@ -339,10 +339,21 @@
     100% { transform: translateX(-100%); }
   }
 
+  /* Hide mobile-only controls by default, show on small viewports */
+  .ctrl-mobile { display: none; }
+
   @media (max-width: 720px) {
-    .panel h1 { font-size: 36px; }
+    .panel { padding: 6px 10px; justify-content: center; }
+    .panel h1 { font-size: 22px; margin-bottom: 2px; -webkit-text-stroke: 1px #000; text-shadow: 2px 2px 0 #ff00ff, 4px 4px 0 #00ffff, 5px 5px 0 #000; letter-spacing: 1px; }
+    .panel h2 { font-size: 13px; margin-bottom: 4px; }
+    .panel p { font-size: 11px; line-height: 1.3; margin: 2px 0; }
+    .panel .key { padding: 2px 6px; font-size: 11px; }
+    .start-btn { font-size: 18px; padding: 6px 18px; margin-top: 6px; box-shadow: 3px 3px 0 #000; }
+    .ctrl-desktop { display: none; }
+    .ctrl-mobile { display: block; }
     .hud-box { font-size: 14px; padding: 3px 6px; }
     .combo { font-size: 36px; }
+    .gameover-title { font-size: 24px !important; }
   }
 </style>
 </head>
@@ -378,8 +389,10 @@
       <h1>RAMP SKATER 2000</h1>
       <h2 class="blink">★ INSERT QUARTER ★</h2>
       <p>Jump over the Ramp cards. Don't crash.</p>
-      <p>Press <span class="key">SPACE</span> or <span class="key">↑</span> to <b>OLLIE</b></p>
-      <p>Hold for higher jumps. Tap fast to combo.</p>
+      <p class="ctrl-desktop">Press <span class="key">SPACE</span> or <span class="key">↑</span> to <b>OLLIE</b></p>
+      <p class="ctrl-mobile"><span class="key">TAP</span> the screen to <b>OLLIE</b></p>
+      <p class="ctrl-desktop">Hold for higher jumps. Tap fast to combo.</p>
+      <p class="ctrl-mobile">Hold for higher jumps. Tap fast to combo.</p>
       <button class="start-btn" id="start-btn">▶ SKATE!</button>
       <p style="margin-top:18px;font-size:10px;opacity:.7;">© MMXXVI Ramp2000 Productions — All Rights Shredded</p>
     </div>
@@ -391,7 +404,8 @@
       <div class="scores-line">HI: <span class="num" id="final-hi">0</span></div>
       <div class="scores-line">CARDS DODGED: <span class="num" id="final-cards">0</span></div>
       <button class="start-btn" id="retry-btn">▶ TRY AGAIN</button>
-      <p style="margin-top:14px;font-size:11px;">Press <span class="key">SPACE</span> to retry</p>
+      <p class="ctrl-desktop" style="margin-top:14px;font-size:11px;">Press <span class="key">SPACE</span> to retry</p>
+      <p class="ctrl-mobile" style="margin-top:14px;font-size:11px;"><span class="key">TAP</span> to retry</p>
     </div>
 
     <div class="scanlines"></div>
