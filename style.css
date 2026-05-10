@@ -1,0 +1,436 @@
+/* ============================================
+   RAMP.COM Y2K STYLE SHEET v1.0
+   Best viewed at 800x600 in 32-bit color
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap');
+
+body {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 13px;
+  margin: 0;
+  padding: 0;
+  background-color: #000080;
+  /* tiled "stars" pattern background */
+  background-image:
+    radial-gradient(circle at 10% 20%, #ffff00 1px, transparent 2px),
+    radial-gradient(circle at 80% 70%, #00ffff 1px, transparent 2px),
+    radial-gradient(circle at 40% 80%, #ff00ff 1px, transparent 2px),
+    radial-gradient(circle at 65% 15%, #ffffff 1px, transparent 2px),
+    radial-gradient(circle at 25% 55%, #00ff00 1px, transparent 2px);
+  background-size: 80px 80px, 120px 120px, 100px 100px, 90px 90px, 110px 110px;
+  color: #ffffff;
+}
+
+a:link, a:visited { color: #0000ee; text-decoration: underline; }
+a:hover { color: #ff0000; background: #ffff00; }
+/* Sidebar links default to bright on dark; lists with .dark class flip for light backgrounds */
+.side-col a:link, .side-col a:visited { color: #ffffff; }
+.side-col a:hover { color: #ff0000; background: #ffff00; }
+.side-col .link-list.dark a:link, .side-col .link-list.dark a:visited { color: #000080; }
+/* NET-TECH list: dark blue on yellow */
+.side-col .side-box[style*="#ffff00"] .link-list a:link,
+.side-col .side-box[style*="#ffff00"] .link-list a:visited { color: #000080; }
+.side-col .side-box[style*="#ffff00"] .link-list li { color: #000080; border-bottom-color: rgba(0,0,80,.3); }
+/* Member-login (navy bg) keeps light text -- already covered */
+/* Treasury-style dark navy boxes already use light text */
+.side-col .side-box[style*="#000080"] .link-list a:link,
+.side-col .side-box[style*="#000080"] .link-list a:visited { color: #ffff00; }
+/* Light-bg sidebar boxes get dark text */
+.side-col .side-box[style*="#fff"] .link-list a:link,
+.side-col .side-box[style*="#fff"] .link-list a:visited { color: #000080; }
+.side-col .side-box[style*="#fff"] .link-list li { color: #000080; border-bottom-color: rgba(0,0,80,.3); }
+
+/* ===== Marquees ===== */
+.top-marquee {
+  background: linear-gradient(90deg, #ff0000, #ff8800, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff);
+  background-size: 200% 100%;
+  animation: rainbow 4s linear infinite;
+  padding: 4px 0;
+  border-bottom: 3px ridge #fff;
+  font-family: Impact, sans-serif;
+  font-size: 14px;
+  color: #000;
+  font-weight: bold;
+  text-shadow: 1px 1px 0 #fff;
+}
+.bottom-marquee {
+  background: #000;
+  border-top: 3px ridge #ffff00;
+  border-bottom: 3px ridge #ffff00;
+  padding: 6px 0;
+  color: #ffff00;
+  font-family: Impact, sans-serif;
+  font-size: 14px;
+}
+
+@keyframes rainbow {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 200% 0%; }
+}
+
+/* ===== Header ===== */
+.header-table { border-bottom: 4px ridge #ffff00; }
+
+.logo-blink {
+  font-family: Impact, sans-serif;
+  font-size: 42px;
+  letter-spacing: -2px;
+  line-height: 1;
+  padding: 6px 0 0 0;
+  text-shadow: 2px 2px 0 #000, 4px 4px 0 #ff0000;
+}
+.logo-r { color: #ff0000; }
+.logo-a { color: #00aa00; }
+.logo-m { color: #0000ff; }
+.logo-p { color: #ff00ff; }
+.logo-com { font-size: 16px; color: #000; vertical-align: super; }
+
+.under-construction-bar {
+  background: repeating-linear-gradient(45deg, #000 0 12px, #ffcc00 12px 24px);
+  padding: 4px;
+  text-align: center;
+  border-top: 2px solid #000;
+}
+.under-construction-bar img { vertical-align: middle; }
+
+/* ===== Nav ===== */
+.nav-table { border-bottom: 3px ridge #ffff00; }
+.nav-btn {
+  display: inline-block;
+  padding: 6px 10px;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  color: #ffff00 !important;
+  text-decoration: none;
+  border-right: 1px dotted #444;
+}
+.nav-btn:hover {
+  background: #ffff00 !important;
+  color: #ff0000 !important;
+}
+
+/* ===== Main layout ===== */
+.main-table {
+  border: 4px ridge #ffff00;
+  background: #000080;
+}
+.side-col {
+  width: 200px;
+  vertical-align: top;
+  padding: 6px;
+}
+.center-col {
+  vertical-align: top;
+  padding: 8px;
+  background-image:
+    radial-gradient(circle at 0 0, rgba(255,255,200,.5) 0, transparent 60%),
+    radial-gradient(circle at 100% 100%, rgba(200,255,255,.5) 0, transparent 60%);
+}
+
+.side-box {
+  margin-bottom: 10px;
+  padding: 6px;
+  text-align: center;
+}
+.side-box.ad {
+  background: linear-gradient(135deg, #ff0000, #ff8800, #ff00ff);
+  background-size: 200% 200%;
+  animation: rainbow 3s linear infinite;
+  border: 4px outset #fff;
+  cursor: pointer;
+  padding: 12px 6px;
+  text-shadow: 1px 1px 0 #000;
+}
+.side-box.ad2 {
+  background: linear-gradient(135deg, #ff00ff, #00ffff);
+  position: relative;
+}
+.monkey {
+  font-size: 40px;
+  animation: shake .3s linear infinite;
+  display: inline-block;
+}
+@keyframes shake {
+  0%,100% { transform: rotate(-15deg); }
+  50% { transform: rotate(15deg); }
+}
+
+/* ===== Hit counter ===== */
+.hit-counter {
+  display: inline-block;
+  background: #000;
+  padding: 4px 6px;
+  margin: 4px 0;
+  border: 2px inset #444;
+}
+.hit-counter span {
+  display: inline-block;
+  background: #000;
+  color: #00ff00;
+  font-family: 'VT323', 'Courier New', monospace;
+  font-size: 24px;
+  width: 18px;
+  text-align: center;
+  border-right: 1px solid #003300;
+  font-weight: bold;
+}
+
+/* ===== Awards ===== */
+.award {
+  display: inline-block;
+  width: 70px;
+  height: 70px;
+  margin: 3px;
+  padding: 4px;
+  font-family: Arial;
+  font-size: 9px;
+  font-weight: bold;
+  text-align: center;
+  border: 2px outset #fff;
+  vertical-align: middle;
+  line-height: 1.1;
+}
+.award.gold { background: radial-gradient(circle, #ffd700, #aa8800); color: #000; }
+.award.silver { background: radial-gradient(circle, #c0c0c0, #777); color: #000; }
+.award.bronze { background: radial-gradient(circle, #cd7f32, #6b3a14); color: #fff; }
+.award.gold2 { background: radial-gradient(circle, #ffff66, #cc8800); color: #000; }
+.award span { font-size: 18px; }
+
+.browser-badge {
+  display: inline-block;
+  width: 78px;
+  font-family: Arial;
+  font-size: 9px;
+  font-weight: bold;
+  padding: 6px 4px;
+  margin: 3px 1px;
+  border: 2px outset #fff;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 1.1;
+}
+.browser-badge.ns { background: #000; color: #00ff00; }
+.browser-badge.ie { background: #fff; color: #0000aa; border-color: #0000aa; }
+
+/* ===== Link lists ===== */
+.link-list {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0;
+  text-align: left;
+}
+.link-list li {
+  padding: 2px 4px;
+  border-bottom: 1px dotted rgba(255,255,255,.4);
+  font-family: Arial;
+  font-size: 12px;
+  font-weight: bold;
+}
+.link-list.dark li { border-bottom-color: rgba(0,0,0,.3); color: #000; }
+.link-list.small li { font-size: 11px; }
+.link-list a { text-decoration: none; }
+.link-list a:hover { text-decoration: underline; }
+
+.tight-list {
+  margin: 4px 0 4px 18px;
+  padding: 0;
+  font-size: 12px;
+}
+.tight-list li { margin: 2px 0; }
+
+/* ===== Hero ===== */
+.hero {
+  background: #ffffff;
+  border: 4px ridge #ff00ff;
+  padding: 12px;
+  text-align: center;
+  margin-bottom: 10px;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(255,255,0,.5), transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255,0,255,.4), transparent 50%);
+}
+.hero-stars { font-size: 22px; letter-spacing: 6px; color: #ffaa00; }
+.rainbow-text {
+  font-family: Impact, sans-serif;
+  font-size: 60px;
+  margin: 6px 0;
+  letter-spacing: -2px;
+  background: linear-gradient(90deg, #ff0000, #ff8800, #ffff00, #00aa00, #0000ff, #ff00ff, #ff0000);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 3px 3px 0 rgba(0,0,0,.2);
+  animation: rainbow 5s linear infinite;
+}
+.hero-subtitle { margin: 6px 0 10px; }
+.hero-marquee {
+  background: #000;
+  color: #ffff00;
+  border: 2px inset #c0c0c0;
+  font-family: Impact;
+  font-size: 14px;
+  padding: 4px 0;
+  margin: 8px 0;
+}
+.hero-cta { margin: 10px 0; }
+
+/* ===== Buttons ===== */
+.big-btn, .med-btn, .sm-btn {
+  display: inline-block;
+  font-family: Impact, sans-serif;
+  text-decoration: none;
+  border: 4px outset #ffff00;
+  padding: 8px 18px;
+  margin: 4px;
+  background: linear-gradient(180deg, #ff0000, #aa0000);
+  color: #ffff00 !important;
+  font-size: 18px;
+  text-shadow: 2px 2px 0 #000;
+  cursor: pointer;
+}
+.big-btn:hover { background: linear-gradient(180deg, #ffff00, #ff8800); color: #ff0000 !important; border-style: inset; }
+.big-btn.alt { background: linear-gradient(180deg, #00aa00, #006600); }
+.big-btn.alt:hover { background: linear-gradient(180deg, #00ffff, #00aaaa); color: #000080 !important; }
+
+.med-btn { font-size: 14px; padding: 6px 12px; border-width: 3px; }
+.sm-btn  { font-size: 12px; padding: 4px 8px;  border-width: 2px; background: linear-gradient(180deg,#0066ff,#000080); }
+
+/* ===== Content sections ===== */
+.content-section { margin-bottom: 12px; }
+.content-section.nopad td { padding: 6px; }
+.content-section td { font-size: 13px; }
+/* Default text color = black on light-bg body cells (so plain text and unstyled <font> tags read on cream/yellow/pink/white). The <font color=...> attr generates an inline element style and still wins. */
+.content-section td[bgcolor="#ffffff"],
+.content-section td[bgcolor="#ffffe0"],
+.content-section td[bgcolor="#ffffcc"],
+.content-section td[bgcolor="#fffbcc"],
+.content-section td[bgcolor="#fff8e0"],
+.content-section td[bgcolor="#fff0ff"],
+.content-section td[bgcolor="#ffeecc"],
+.content-section td[bgcolor="#ccffcc"],
+.content-section td[bgcolor="#eeffee"],
+.content-section td[bgcolor="#eeeeff"],
+.content-section td[bgcolor="#ffeeff"],
+.content-section td[bgcolor="#f0ffe0"],
+.content-section td[bgcolor="#e0e0ff"],
+.content-section td[bgcolor="#fff"],
+.content-section td[bgcolor="#FFF"] { color: #000; }
+
+.feat-list { margin: 4px 0 4px 22px; padding: 0; line-height: 1.5; }
+.feat-list li { margin: 3px 0; }
+
+.testimonial {
+  background: #fffbcc;
+  border-left: 6px solid #ff00ff;
+  padding: 8px 10px;
+  margin: 8px 0;
+}
+
+/* ===== Stats bar ===== */
+.stats-bar { margin: 10px 0; }
+.stats-bar td { padding: 8px 4px; border: 3px outset #fff; }
+.stats-bar font[face="Impact"] { text-shadow: 2px 2px 0 #000; line-height: 1; }
+
+/* ===== How-it-works table ===== */
+.how-it-works { margin: 8px 0; font-size: 12px; }
+.how-it-works th { font-family: Impact; color: #000; padding: 4px; }
+
+.agent-list, .pay-list { margin: 4px 0 4px 22px; padding: 0; line-height: 1.5; }
+
+/* ===== Dollar gif placeholder ===== */
+.dollar-gif {
+  font-size: 36px;
+  background: linear-gradient(135deg, #00aa00, #00ff00, #ffff00);
+  background-size: 200% 200%;
+  animation: rainbow 2s linear infinite;
+  border: 3px ridge #ffff00;
+  padding: 8px;
+  display: inline-block;
+  text-align: center;
+  line-height: 1;
+}
+
+/* ===== AI terminal ===== */
+.dot-blink { animation: blink 1s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ===== Stickers ===== */
+.sticker {
+  display: inline-block;
+  width: 60px;
+  font-family: Arial;
+  font-size: 8px;
+  text-align: center;
+  background: linear-gradient(180deg, #fff, #ccc);
+  color: #000;
+  padding: 4px;
+  margin: 2px;
+  border: 1px solid #888;
+  vertical-align: middle;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+/* ===== Webring ===== */
+.ring-btn {
+  color: #ffff00 !important;
+  font-family: Impact;
+  text-decoration: none;
+  font-size: 14px;
+}
+.ring-btn.dark { color: #000 !important; }
+
+/* ===== Card SVG ===== */
+.card-svg {
+  border: 3px ridge #ffff00;
+  background: #000;
+  padding: 4px;
+}
+
+/* ===== Guestbook ===== */
+.guestbook { margin: 4px 0 4px 22px; padding: 0; }
+.guestbook li { margin: 4px 0; font-size: 12px; }
+
+/* ===== Form inputs ===== */
+input[type="text"], input[type="password"], textarea {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  border: 2px inset #c0c0c0;
+  background: #fff;
+  padding: 2px 4px;
+}
+input[type="submit"], input[type="reset"], input[type="button"] {
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  background: linear-gradient(180deg, #fff, #c0c0c0);
+  border: 2px outset #fff;
+  padding: 2px 8px;
+  cursor: pointer;
+}
+input[type="submit"]:hover { background: linear-gradient(180deg, #ffff00, #ffaa00); }
+
+/* ===== Footer ===== */
+.footer-table {
+  border-top: 4px ridge #ffff00;
+  background: #000080;
+}
+
+/* ===== <blink> support (browsers don't blink anymore) ===== */
+blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* ===== HR ===== */
+hr {
+  border: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #ff00ff, transparent);
+}
+
+/* Tooltip cursor on logo etc */
+.logo-blink { cursor: pointer; }
