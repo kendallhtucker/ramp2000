@@ -293,7 +293,11 @@ function submitPS1(e) {
   payload.append('user_agent', navigator.userAgent || '');
   payload.append('referrer', document.referrer || '');
   try {
-    fetch(WEB3FORMS_URL, { method: 'POST', body: payload });
+    fetch(WEB3FORMS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: payload
+    });
   } catch (err) { /* fail silently — we still redirect */ }
 
   // Show thanks state
