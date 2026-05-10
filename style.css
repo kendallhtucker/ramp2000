@@ -434,3 +434,214 @@ hr {
 
 /* Tooltip cursor on logo etc */
 .logo-blink { cursor: pointer; }
+
+/* ===== Email input ===== */
+input[type="email"] {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  border: 2px inset #c0c0c0;
+  background: #fff;
+  padding: 2px 4px;
+}
+
+/* ===== Modal (iPad giveaway, chat fallback) ===== */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 80, 0.85);
+  z-index: 10000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+}
+.modal-box {
+  background: #ffffcc;
+  border: 6px ridge #ff00ff;
+  max-width: 560px;
+  width: 100%;
+  box-shadow: 8px 8px 0 rgba(0,0,0,0.5);
+  font-family: "Times New Roman", serif;
+  color: #000;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-header {
+  background: linear-gradient(180deg, #ff00ff, #aa00aa);
+  color: #ffff00;
+  font-family: Impact, sans-serif;
+  font-size: 18px;
+  padding: 6px 12px;
+  border-bottom: 3px ridge #ffff00;
+  text-shadow: 1px 1px 0 #000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-close {
+  color: #ffff00 !important;
+  text-decoration: none;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  background: #ff0000;
+  border: 2px outset #fff;
+  padding: 0 6px;
+}
+.modal-close:hover { background: #fff !important; color: #ff0000 !important; }
+.modal-body { padding: 14px 18px; color: #000; }
+.modal-body input[type="text"],
+.modal-body input[type="email"],
+.modal-body select { width: 100%; box-sizing: border-box; }
+.ipad-table, .gb-table { width: 100%; }
+.ipad-table td:first-child { width: 110px; vertical-align: top; padding-top: 6px; }
+.big-submit {
+  font-family: Impact, sans-serif !important;
+  font-size: 18px !important;
+  padding: 8px 24px !important;
+  background: linear-gradient(180deg, #00ff00, #008800) !important;
+  border: 4px outset #ffff00 !important;
+  color: #ffff00 !important;
+  text-shadow: 1px 1px 0 #000;
+  cursor: pointer;
+  margin: 8px 0;
+}
+.big-submit:hover {
+  background: linear-gradient(180deg, #ffff00, #ff8800) !important;
+  color: #ff0000 !important;
+}
+
+/* ===========================================================
+   MOBILE RESPONSIVENESS — keep the maximalism, fit on phones
+   =========================================================== */
+@media screen and (max-width: 720px) {
+  body {
+    background-size: 40px 40px, 60px 60px, 50px 50px, 45px 45px, 55px 55px;
+  }
+  /* Top marquee — smaller text */
+  .top-marquee { font-size: 10px; padding: 3px 0; }
+  .bottom-marquee { font-size: 10px; padding: 4px 0; }
+
+  /* Header table — stack logo + tagline */
+  .header-table tr,
+  .header-table tbody { display: block; }
+  .header-table td {
+    display: block !important;
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+  .logo-blink { font-size: 32px; }
+  .header-table td[bgcolor="#ff00ff"] font[size="6"] { font-size: 18px !important; }
+  .header-table td[bgcolor="#ff00ff"] font[size="4"] { font-size: 12px !important; }
+  .under-construction-bar img { width: 30px; height: 20px; }
+  .under-construction-bar font { font-size: 9px !important; }
+
+  /* Nav bar — wrap into 2-3 rows */
+  .nav-table tr { display: flex; flex-wrap: wrap; }
+  .nav-table td { flex: 1 1 33%; }
+  .nav-btn { font-size: 10px; padding: 4px 2px; }
+
+  /* MAIN LAYOUT — stack the 3 columns vertically */
+  .main-table tr,
+  .main-table tbody { display: block; }
+  .main-table > tbody > tr > td,
+  .main-table > tr > td {
+    display: block !important;
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+  .side-col { width: 100% !important; padding: 8px 4px; }
+  .center-col { padding: 6px 4px; }
+
+  /* Hero — shrink the giant rainbow */
+  .rainbow-text { font-size: 32px; letter-spacing: -1px; }
+  .hero-stars { font-size: 16px; letter-spacing: 3px; }
+  .hero-marquee { font-size: 11px; }
+  .hero-subtitle font[size="6"] { font-size: 28px !important; }
+  .hero-subtitle font[size="4"] { font-size: 14px !important; }
+  .hero-cta { display: flex; flex-direction: column; gap: 6px; }
+  .big-btn { font-size: 14px; padding: 6px 12px; margin: 2px 0; }
+
+  /* Section headers — smaller Impact text */
+  .content-section td font[size="5"] { font-size: 18px !important; }
+  .content-section td font[size="4"] { font-size: 14px !important; }
+  .content-section td font[size="3"] { font-size: 13px !important; }
+
+  /* Stats bar — wrap to 2-3 per row */
+  .stats-bar tr { display: flex; flex-wrap: wrap; }
+  .stats-bar td { flex: 1 1 45% !important; padding: 6px 2px; }
+  .stats-bar font[size="6"] { font-size: 22px !important; }
+
+  /* Two-column travel/procurement → stack */
+  .center-col table[border="0"] tbody tr,
+  .center-col table[width="100%"][border="0"] tbody tr,
+  .center-col table[width="100%"][border="0"] tr { display: block; }
+  .center-col table[border="0"] td,
+  .center-col table[width="100%"][border="0"] td {
+    display: block !important;
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  /* Card section image */
+  .card-svg { width: 100%; max-width: 200px; height: auto; }
+
+  /* Pricing tiers — stack 3 columns */
+  .content-section table[width="100%"][border="2"] tr { display: flex; flex-wrap: wrap; }
+  .content-section table[width="100%"][border="2"] th,
+  .content-section table[width="100%"][border="2"] td { flex: 1 1 100%; width: 100% !important; }
+
+  /* How-it-works table — keep horizontal but tighten */
+  .how-it-works { font-size: 10px; }
+  .how-it-works th, .how-it-works td { padding: 2px; }
+
+  /* Webring — stack buttons */
+  .ring-table tr { display: flex; flex-wrap: wrap; }
+  .ring-table td { flex: 1 1 33%; }
+  .ring-btn { font-size: 11px; }
+  /* Founders Fund grid — 3 per row */
+  .center-col table[border="1"] tr { display: flex; flex-wrap: wrap; }
+  .center-col table[border="1"] td { flex: 1 1 33% !important; padding: 3px !important; }
+
+  /* Testimonials — stack */
+  .content-section td[bgcolor="#ffffe0"] table tr { display: block; }
+  .content-section td[bgcolor="#ffffe0"] table td {
+    display: block !important;
+    width: 100% !important;
+    margin-bottom: 8px;
+  }
+
+  /* Guestbook form */
+  .gb-table tr { display: block; }
+  .gb-table td { display: block !important; width: 100% !important; padding: 2px 0; }
+  .gb-table input[type="text"],
+  .gb-table input[type="email"],
+  .gb-table textarea { width: 100%; box-sizing: border-box; }
+
+  /* Sidebar boxes — 2 across when there's room */
+  .side-col .side-box { padding: 6px 4px; }
+  .award { width: 56px; height: 56px; font-size: 8px; }
+  .browser-badge { width: 64px; font-size: 8px; }
+  .sticker { width: 50px; font-size: 7px; }
+
+  /* Footer links — wrap nicely */
+  .footer-table { font-size: 10px; }
+  .footer-table a { display: inline-block; padding: 2px 4px; }
+
+  /* Modal mobile */
+  .modal { padding: 10px; }
+  .modal-box { max-height: 95vh; }
+  .modal-header { font-size: 14px; padding: 4px 8px; }
+  .modal-body { padding: 10px; }
+  .ipad-table tr { display: block; }
+  .ipad-table td { display: block !important; width: 100% !important; padding: 3px 0; }
+  .ipad-table td:first-child { width: 100% !important; }
+  .big-submit { font-size: 14px !important; padding: 6px 18px !important; }
+}
+
+/* Even smaller phones */
+@media screen and (max-width: 380px) {
+  .rainbow-text { font-size: 26px; }
+  .nav-btn { font-size: 9px; padding: 3px 1px; }
+  .stats-bar font[size="6"] { font-size: 18px !important; }
+}
