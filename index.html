@@ -599,6 +599,19 @@
   </div>
   </a>
 
+  <!-- TONY HAWK RAMP SKATER 2000 — FLASH GAME -->
+  <div class="side-box game-launcher" onclick="openGameModal()" style="cursor:pointer;background:linear-gradient(180deg,#ff0080 0%,#ff8c00 50%,#ffff00 100%);border:3px outset #ff00ff;text-align:center;padding:8px;box-shadow:0 0 20px #ff00ff;">
+    <font face="Impact" size="4" color="#000" style="text-shadow:2px 2px 0 #fff;letter-spacing:1px;">&#127950; FLASH GAME! &#127950;</font><br>
+    <font face="Impact" size="5" color="#fff" style="text-shadow:2px 2px 0 #000, 4px 4px 0 #ff00ff;letter-spacing:1px;line-height:1;">TONY HAWK&apos;S<br>RAMP SKATER<br>2000</font>
+    <div style="background:#000;border:2px inset #fff;margin:6px 0;padding:6px;">
+      <div style="font-family:Impact,sans-serif;font-size:11px;color:#0f0;text-shadow:0 0 6px #0f0;letter-spacing:1px;">&gt; PRESS SPACE TO OLLIE</div>
+      <div style="font-family:Impact,sans-serif;font-size:11px;color:#ff0;text-shadow:0 0 6px #ff0;letter-spacing:1px;">&gt; JUMP THE CARDS!</div>
+      <div style="font-family:Impact,sans-serif;font-size:11px;color:#0ff;text-shadow:0 0 6px #0ff;letter-spacing:1px;">&gt; SHRED 4 HI-SCORE</div>
+    </div>
+    <button type="button" style="background:linear-gradient(180deg,#ffff00,#ff8800);border:3px outset #ffff00;color:#000;font-family:Impact,sans-serif;font-size:18px;padding:6px 14px;cursor:pointer;letter-spacing:2px;text-shadow:1px 1px 0 #fff;box-shadow:3px 3px 0 #000;font-weight:bold;">&#9654; PLAY NOW!</button>
+    <br><font size="1" color="#000" face="Arial"><i><b>Requires Flash 6.0+</b><br>1.2 MB download</i></font>
+  </div>
+
   <!-- SISTER SITES (real Ramp products!) -->
   <div class="side-box" style="background:#fff;border:3px ridge #00aa00;">
     <font face="Impact" size="3" color="#008000">&#127760; OUR SISTER PAGES</font>
@@ -676,6 +689,46 @@
 </td></tr>
 </table>
 
+
+<!-- ============ FLASH GAME POPUP MODAL ============ -->
+<div id="game-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:99999;align-items:center;justify-content:center;padding:10px;">
+  <div style="position:relative;width:min(880px,98vw);max-height:96vh;background:#c0c0c0;border:3px solid #000;border-right-color:#404040;border-bottom-color:#404040;box-shadow:inset 2px 2px 0 #fff,inset -2px -2px 0 #808080,12px 12px 0 rgba(0,0,0,0.7);">
+    <div style="background:linear-gradient(90deg,#000080,#1084d0,#ff00ff);color:#fff;padding:4px 6px;font-family:Tahoma,sans-serif;font-size:13px;font-weight:bold;display:flex;justify-content:space-between;align-items:center;text-shadow:1px 1px 0 #000;letter-spacing:0.5px;">
+      <span>&#9650;&#9658; TONY HAWK&apos;S RAMP SKATER 2000.swf &#8212; Macromedia Flash</span>
+      <span>
+        <span onclick="closeGameModal()" style="display:inline-block;width:24px;height:18px;background:#c0c0c0;border:1px solid #000;border-right-color:#404040;border-bottom-color:#404040;box-shadow:inset 1px 1px 0 #fff;color:#000;text-align:center;line-height:16px;cursor:pointer;font-weight:bold;">&#215;</span>
+      </span>
+    </div>
+    <div style="background:#c0c0c0;border-bottom:1px solid #808080;padding:3px 6px;font-family:Tahoma,sans-serif;font-size:11px;color:#000;">
+      <b>Now Loading:</b> ramp2000/games/tonyhawk.swf &nbsp;&#8226;&nbsp; <span style="color:#008000;">&#9679;</span> Connected
+    </div>
+    <iframe id="game-iframe" src="" style="display:block;width:100%;height:min(620px,calc(96vh - 90px));border:0;background:#000;"></iframe>
+    <div style="background:#c0c0c0;border-top:1px solid #fff;padding:3px 8px;font-family:Tahoma,sans-serif;font-size:11px;color:#000;display:flex;justify-content:space-between;">
+      <span><b>Done</b> &nbsp;&#8226;&nbsp; Click game window first, then SPACE to jump</span>
+      <span style="color:#000080;">100% &#8212; Internet Zone</span>
+    </div>
+  </div>
+</div>
+
+<script>
+function openGameModal(){
+  var m = document.getElementById('game-modal');
+  var f = document.getElementById('game-iframe');
+  f.src = 'game.html';
+  m.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function closeGameModal(){
+  var m = document.getElementById('game-modal');
+  var f = document.getElementById('game-iframe');
+  m.style.display = 'none';
+  f.src = '';
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape'){ closeGameModal(); }
+});
+</script>
 
 <script src="script.js"></script>
 </body>

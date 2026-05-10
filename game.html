@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TONY HAWK'S RAMP SKATER 2000 :: Y2K EDITION</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  /* ============ Y2K FLASH GAME WINDOW ============ */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 100%; height: 100%;
+    background:
+      repeating-linear-gradient(45deg, #000 0 20px, #ffff00 20px 40px);
+    font-family: "Comic Sans MS", "Chalkboard", cursive;
+    overflow: hidden;
+    color: #fff;
+  }
+  /* Fake desktop pattern with retro star burst behind window */
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(255,0,255,.35), transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(0,255,255,.35), transparent 40%);
+    pointer-events: none;
+  }
+
+  /* Flash-style game window */
+  .game-window {
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: min(820px, 96vw);
+    background: #c0c0c0;
+    border: 3px solid #000;
+    border-right-color: #404040;
+    border-bottom-color: #404040;
+    box-shadow:
+      inset 2px 2px 0 #fff,
+      inset -2px -2px 0 #808080,
+      8px 8px 0 rgba(0,0,0,.6),
+      0 0 0 4px #ff00ff,
+      0 0 40px rgba(255,0,255,.8);
+    padding: 0;
+  }
+  .titlebar {
+    background: linear-gradient(90deg, #000080, #1084d0, #ff00ff);
+    color: #fff;
+    padding: 4px 6px;
+    font-family: "Tahoma", "MS Sans Serif", sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-shadow: 1px 1px 0 #000;
+    letter-spacing: 0.5px;
+  }
+  .titlebar .title-text {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .title-icon {
+    width: 16px; height: 16px;
+    background: #ffff00;
+    border: 1px solid #000;
+    display: inline-block;
+    position: relative;
+  }
+  .title-icon::after {
+    content: "♦";
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: #ff0000; font-size: 12px; line-height: 1;
+  }
+  .win-btns { display: flex; gap: 2px; }
+  .win-btn {
+    width: 18px; height: 16px;
+    background: #c0c0c0;
+    border: 1px solid #000;
+    border-right-color: #404040;
+    border-bottom-color: #404040;
+    box-shadow: inset 1px 1px 0 #fff;
+    color: #000;
+    font-size: 10px;
+    font-family: "Marlett", sans-serif;
+    text-align: center;
+    line-height: 14px;
+    cursor: pointer;
+  }
+
+  .menubar {
+    background: #c0c0c0;
+    padding: 3px 6px;
+    font-family: "Tahoma", sans-serif;
+    font-size: 11px;
+    color: #000;
+    border-bottom: 1px solid #808080;
+    display: flex;
+    gap: 12px;
+  }
+  .menubar span { cursor: default; }
+  .menubar span:hover { background: #000080; color: #fff; }
+
+  .game-stage {
+    position: relative;
+    background: #000;
+    overflow: hidden;
+  }
+  #canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    cursor: crosshair;
+  }
+
+  /* HUD overlays */
+  .hud-top {
+    position: absolute;
+    top: 8px; left: 8px; right: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    pointer-events: none;
+    font-family: "Impact", "Arial Black", sans-serif;
+    text-transform: uppercase;
+    z-index: 5;
+  }
+  .hud-box {
+    background: rgba(0,0,0,.6);
+    border: 2px solid #00ff00;
+    box-shadow: 0 0 10px #00ff00, inset 0 0 10px rgba(0,255,0,.3);
+    padding: 4px 10px;
+    color: #00ff00;
+    text-shadow: 0 0 6px #00ff00, 2px 2px 0 #000;
+    font-size: 18px;
+    letter-spacing: 2px;
+  }
+  .hud-box.pink {
+    border-color: #ff00ff;
+    color: #ff00ff;
+    box-shadow: 0 0 10px #ff00ff, inset 0 0 10px rgba(255,0,255,.3);
+    text-shadow: 0 0 6px #ff00ff, 2px 2px 0 #000;
+  }
+  .hud-box small { font-size: 10px; display: block; opacity: .8; letter-spacing: 1px; }
+
+  .combo {
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+    font-family: "Impact", "Arial Black", sans-serif;
+    font-size: 56px;
+    color: #ffff00;
+    text-shadow:
+      3px 3px 0 #ff00ff,
+      6px 6px 0 #00ffff,
+      9px 9px 0 #000;
+    -webkit-text-stroke: 2px #000;
+    letter-spacing: 4px;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 6;
+    text-transform: uppercase;
+  }
+  .combo.show {
+    animation: comboPop 0.9s ease-out forwards;
+  }
+  @keyframes comboPop {
+    0%   { opacity: 0; transform: translate(-50%,-50%) scale(0.3) rotate(-15deg); }
+    20%  { opacity: 1; transform: translate(-50%,-50%) scale(1.3) rotate(5deg); }
+    100% { opacity: 0; transform: translate(-50%,-80%) scale(1) rotate(-5deg); }
+  }
+
+  /* Start / Game over panels */
+  .panel {
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(0deg, rgba(0,0,0,.7) 0 3px, rgba(0,0,0,.5) 3px 6px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+  }
+  .panel.hidden { display: none; }
+  .panel h1 {
+    font-family: "Impact", "Arial Black", sans-serif;
+    font-size: 56px;
+    line-height: .9;
+    color: #ffff00;
+    text-shadow:
+      3px 3px 0 #ff00ff,
+      6px 6px 0 #00ffff,
+      9px 9px 0 #000;
+    -webkit-text-stroke: 2px #000;
+    letter-spacing: 4px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .panel h2 {
+    font-family: "Comic Sans MS", cursive;
+    font-size: 22px;
+    color: #00ff00;
+    text-shadow: 2px 2px 0 #000, 0 0 10px #00ff00;
+    margin-bottom: 20px;
+  }
+  .panel p { font-size: 14px; line-height: 1.6; margin: 8px 0; max-width: 560px; }
+  .panel .key {
+    display: inline-block;
+    background: #fff;
+    color: #000;
+    padding: 3px 10px;
+    border: 2px solid #000;
+    border-radius: 4px;
+    box-shadow: 2px 2px 0 #000;
+    font-family: "Courier New", monospace;
+    font-weight: bold;
+    margin: 0 4px;
+  }
+  .start-btn {
+    margin-top: 16px;
+    background: linear-gradient(180deg, #ffff00, #ff8800);
+    border: 3px outset #ffff00;
+    color: #000;
+    font-family: "Impact", sans-serif;
+    font-size: 28px;
+    padding: 10px 36px;
+    cursor: pointer;
+    letter-spacing: 3px;
+    text-shadow: 1px 1px 0 #fff;
+    box-shadow: 4px 4px 0 #000;
+    text-transform: uppercase;
+  }
+  .start-btn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 #000; }
+  .start-btn:hover { animation: jiggle .2s infinite; }
+  @keyframes jiggle {
+    0%,100% { transform: rotate(-1deg); }
+    50% { transform: rotate(1deg); }
+  }
+  .blink { animation: blinker 1s steps(2) infinite; }
+  @keyframes blinker { 50% { opacity: 0; } }
+
+  .gameover-title {
+    color: #ff0000;
+    text-shadow:
+      3px 3px 0 #ffff00,
+      6px 6px 0 #000;
+  }
+  .scores-line {
+    font-family: "Impact", sans-serif;
+    font-size: 22px;
+    color: #ffff00;
+    text-shadow: 2px 2px 0 #000;
+    margin: 6px 0;
+    letter-spacing: 2px;
+  }
+  .scores-line .num { color: #00ffff; }
+  .new-hi {
+    color: #ff00ff;
+    font-family: "Impact", sans-serif;
+    font-size: 32px;
+    margin: 10px 0;
+    letter-spacing: 3px;
+    text-shadow: 2px 2px 0 #ffff00, 4px 4px 0 #000;
+  }
+
+  /* Scanlines overlay */
+  .scanlines {
+    position: absolute; inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0,0,0,0) 0,
+      rgba(0,0,0,0) 2px,
+      rgba(0,0,0,.15) 3px,
+      rgba(0,0,0,.15) 3px
+    );
+    z-index: 7;
+    mix-blend-mode: multiply;
+  }
+
+  .statusbar {
+    background: #c0c0c0;
+    border-top: 1px solid #fff;
+    padding: 3px 8px;
+    font-family: "Tahoma", sans-serif;
+    font-size: 11px;
+    color: #000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .statusbar .sb-cell {
+    border: 1px solid #808080;
+    border-right-color: #fff;
+    border-bottom-color: #fff;
+    padding: 1px 6px;
+    background: #c0c0c0;
+  }
+
+  /* marquee at bottom */
+  .ticker {
+    background: #000;
+    color: #00ff00;
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    padding: 3px 0;
+    border-top: 2px solid #00ff00;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .ticker span {
+    display: inline-block;
+    padding-left: 100%;
+    animation: tickerScroll 25s linear infinite;
+  }
+  @keyframes tickerScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
+
+  @media (max-width: 720px) {
+    .panel h1 { font-size: 36px; }
+    .hud-box { font-size: 14px; padding: 3px 6px; }
+    .combo { font-size: 36px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="game-window">
+  <div class="titlebar">
+    <div class="title-text">
+      <span class="title-icon"></span>
+      TONY HAWK'S RAMP SKATER 2000 — [Macromedia Flash Player]
+    </div>
+    <div class="win-btns">
+      <div class="win-btn">_</div>
+      <div class="win-btn">□</div>
+      <div class="win-btn" onclick="window.close()">×</div>
+    </div>
+  </div>
+  <div class="menubar">
+    <span>File</span><span>Edit</span><span>View</span><span>Game</span><span>Help</span>
+  </div>
+
+  <div class="game-stage">
+    <canvas id="canvas" width="800" height="450"></canvas>
+
+    <div class="hud-top">
+      <div class="hud-box"><small>SCORE</small><span id="score">000000</span></div>
+      <div class="hud-box pink"><small>HI-SCORE</small><span id="hiscore">000000</span></div>
+    </div>
+
+    <div class="combo" id="combo">OLLIE!</div>
+
+    <div class="panel" id="start-panel">
+      <h1>TONY HAWK'S<br>RAMP SKATER 2000</h1>
+      <h2 class="blink">★ INSERT QUARTER ★</h2>
+      <p>Jump over the Ramp cards. Don't crash.</p>
+      <p>Press <span class="key">SPACE</span> or <span class="key">↑</span> to <b>OLLIE</b></p>
+      <p>Hold for higher jumps. Tap fast to combo.</p>
+      <button class="start-btn" id="start-btn">▶ SKATE!</button>
+      <p style="margin-top:18px;font-size:10px;opacity:.7;">© MMXXVI Ramp2000 Productions — All Rights Shredded</p>
+    </div>
+
+    <div class="panel hidden" id="over-panel">
+      <h1 class="gameover-title blink">WIPEOUT!!</h1>
+      <div class="new-hi hidden" id="new-hi">★ NEW HIGH SCORE ★</div>
+      <div class="scores-line">SCORE: <span class="num" id="final-score">0</span></div>
+      <div class="scores-line">HI: <span class="num" id="final-hi">0</span></div>
+      <div class="scores-line">CARDS DODGED: <span class="num" id="final-cards">0</span></div>
+      <button class="start-btn" id="retry-btn">▶ TRY AGAIN</button>
+      <p style="margin-top:14px;font-size:11px;">Press <span class="key">SPACE</span> to retry</p>
+    </div>
+
+    <div class="scanlines"></div>
+  </div>
+
+  <div class="statusbar">
+    <div class="sb-cell" id="fps">FPS: 60</div>
+    <div class="sb-cell">Flash Player 6.0 r29</div>
+    <div class="sb-cell">100% loaded</div>
+  </div>
+
+  <div class="ticker">
+    <span>★★★ TONY HAWK'S RAMP SKATER 2000 ★★★ JUMP THE CARDS! SHRED THE RAMP! ★★★ POWERED BY MACROMEDIA FLASH ★★★ BEST VIEWED IN INTERNET EXPLORER 5.5 ★★★ THIS GAME IS RADICAL ★★★ KICKFLIP YOUR WAY TO THE TOP ★★★ DON'T FORGET TO ENTER THE PS1 GIVEAWAY ★★★</span>
+  </div>
+</div>
+
+<script>
+/* ===========================================================
+   TONY HAWK'S RAMP SKATER 2000 — Y2K FLASH EDITION
+   =========================================================== */
+(() => {
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  const scoreEl = document.getElementById('score');
+  const hiEl = document.getElementById('hiscore');
+  const comboEl = document.getElementById('combo');
+  const startPanel = document.getElementById('start-panel');
+  const overPanel = document.getElementById('over-panel');
+  const startBtn = document.getElementById('start-btn');
+  const retryBtn = document.getElementById('retry-btn');
+  const finalScore = document.getElementById('final-score');
+  const finalHi = document.getElementById('final-hi');
+  const finalCards = document.getElementById('final-cards');
+  const newHiEl = document.getElementById('new-hi');
+  const fpsEl = document.getElementById('fps');
+
+  /* ---------- Audio (Web Audio API beeps) ---------- */
+  let audioCtx = null;
+  function ac() {
+    if (!audioCtx) {
+      try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
+    }
+    return audioCtx;
+  }
+  function beep(freq, dur=0.08, type='square', vol=0.15, slide=0) {
+    const ctx = ac(); if (!ctx) return;
+    const t = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, t);
+    if (slide) osc.frequency.exponentialRampToValueAtTime(Math.max(40, freq+slide), t+dur);
+    gain.gain.setValueAtTime(vol, t);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(t); osc.stop(t+dur+0.02);
+  }
+  function sfxJump() {
+    beep(440, 0.12, 'square', 0.18, 400);
+    setTimeout(()=>beep(660, 0.08, 'square', 0.12), 60);
+  }
+  function sfxScore() {
+    beep(880, 0.05, 'square', 0.12);
+    setTimeout(()=>beep(1320, 0.08, 'square', 0.12), 50);
+  }
+  function sfxCrash() {
+    const ctx = ac(); if (!ctx) return;
+    const t = ctx.currentTime;
+    const bufferSize = 0.4 * ctx.sampleRate;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i=0;i<bufferSize;i++) data[i] = (Math.random()*2-1) * (1 - i/bufferSize);
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.35, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t+0.4);
+    noise.connect(gain).connect(ctx.destination);
+    noise.start(t);
+    // descending tones
+    [220,180,140,100].forEach((f,i) => setTimeout(()=>beep(f, 0.12, 'sawtooth', 0.18, -40), i*80));
+  }
+  function sfxStart() {
+    [523,659,784,1047].forEach((f,i) => setTimeout(()=>beep(f, 0.1, 'square', 0.16), i*70));
+  }
+
+  /* ---------- Game State ---------- */
+  const GROUND_Y = 360;     // halfpipe floor y
+  const RAMP_TOP_Y = 100;   // top of ramp curve
+  const GRAVITY = 0.65;
+  const JUMP_V = -13.5;
+  const JUMP_HOLD_BOOST = -0.45; // extra lift while holding
+  const MAX_JUMP_HOLD = 14;      // frames
+
+  const state = {
+    running: false,
+    over: false,
+    started: false,
+    t: 0,
+    score: 0,
+    hi: 0,
+    cardsDodged: 0,
+    speed: 4.2,
+    spawnTimer: 90,
+    holdFrames: 0,
+    holding: false,
+    combo: 0,
+    comboTimer: 0,
+    shake: 0,
+    skater: {
+      x: 200,
+      y: GROUND_Y,
+      vy: 0,
+      onGround: true,
+      facing: 1,     // 1 right, -1 left
+      bobT: 0,
+      rotation: 0,   // for trick rotations mid-air
+      tricking: false,
+    },
+    obstacles: [],   // ramp cards
+    particles: [],
+    clouds: [],
+    stars: [],
+  };
+
+  // Init clouds
+  for (let i=0;i<5;i++) state.clouds.push({ x: Math.random()*W, y: 20+Math.random()*60, s: 0.3+Math.random()*0.5 });
+  for (let i=0;i<40;i++) state.stars.push({ x: Math.random()*W, y: Math.random()*180, tw: Math.random()*Math.PI*2 });
+
+  /* ---------- HI score (localStorage) ---------- */
+  try {
+    const stored = localStorage.getItem('ramp2000_thps_hi');
+    if (stored) state.hi = parseInt(stored,10) || 0;
+  } catch(e) {}
+  hiEl.textContent = pad(state.hi);
+
+  function pad(n) { return String(Math.floor(n)).padStart(6,'0'); }
+
+  /* ---------- Input ---------- */
+  function tryJump() {
+    if (!state.running) return;
+    if (state.skater.onGround) {
+      state.skater.vy = JUMP_V;
+      state.skater.onGround = false;
+      state.holding = true;
+      state.holdFrames = 0;
+      state.skater.tricking = true;
+      sfxJump();
+      spawnParticles(state.skater.x, GROUND_Y, 8, '#ffffff');
+      showCombo(randomTrick());
+    }
+  }
+  function endJumpHold() { state.holding = false; }
+
+  function randomTrick() {
+    const tricks = ['OLLIE!','KICKFLIP!','HEELFLIP!','POP SHOVE-IT!','360 FLIP!','MELON!','INDY!','METHOD!','NOSEGRAB!','GNARLY!'];
+    return tricks[Math.floor(Math.random()*tricks.length)];
+  }
+
+  window.addEventListener('keydown', (e) => {
+    if (e.code === 'Space' || e.code === 'ArrowUp' || e.key === ' ') {
+      e.preventDefault();
+      if (state.over) { reset(); start(); return; }
+      if (!state.started) { start(); return; }
+      tryJump();
+    }
+  });
+  window.addEventListener('keyup', (e) => {
+    if (e.code === 'Space' || e.code === 'ArrowUp') endJumpHold();
+  });
+  canvas.addEventListener('mousedown', () => {
+    if (state.over) { reset(); start(); return; }
+    if (!state.started) { start(); return; }
+    tryJump();
+  });
+  canvas.addEventListener('mouseup', endJumpHold);
+  canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (state.over) { reset(); start(); return; }
+    if (!state.started) { start(); return; }
+    tryJump();
+  }, {passive:false});
+  canvas.addEventListener('touchend', endJumpHold);
+
+  startBtn.addEventListener('click', () => { start(); });
+  retryBtn.addEventListener('click', () => { reset(); start(); });
+
+  /* ---------- Game lifecycle ---------- */
+  function start() {
+    if (state.over) reset();
+    state.started = true;
+    state.running = true;
+    state.over = false;
+    startPanel.classList.add('hidden');
+    overPanel.classList.add('hidden');
+    sfxStart();
+  }
+  function reset() {
+    state.running = false;
+    state.over = false;
+    state.t = 0;
+    state.score = 0;
+    state.cardsDodged = 0;
+    state.speed = 4.2;
+    state.spawnTimer = 90;
+    state.combo = 0;
+    state.comboTimer = 0;
+    state.shake = 0;
+    state.obstacles = [];
+    state.particles = [];
+    state.skater.x = 200;
+    state.skater.y = GROUND_Y;
+    state.skater.vy = 0;
+    state.skater.onGround = true;
+    state.skater.tricking = false;
+    state.skater.rotation = 0;
+    scoreEl.textContent = pad(0);
+  }
+  function gameOver() {
+    state.running = false;
+    state.over = true;
+    state.shake = 24;
+    sfxCrash();
+    spawnParticles(state.skater.x, state.skater.y, 30, '#ff0000', true);
+    finalScore.textContent = Math.floor(state.score);
+    finalCards.textContent = state.cardsDodged;
+    const isNew = state.score > state.hi;
+    if (isNew) {
+      state.hi = Math.floor(state.score);
+      try { localStorage.setItem('ramp2000_thps_hi', String(state.hi)); } catch(e) {}
+      newHiEl.classList.remove('hidden');
+    } else {
+      newHiEl.classList.add('hidden');
+    }
+    finalHi.textContent = state.hi;
+    hiEl.textContent = pad(state.hi);
+    setTimeout(()=> overPanel.classList.remove('hidden'), 700);
+  }
+
+  /* ---------- Obstacles (Ramp cards) ---------- */
+  function spawnCard() {
+    state.obstacles.push({
+      x: W + 30,
+      y: GROUND_Y - 22,
+      w: 56,
+      h: 36,
+      passed: false,
+      wobble: Math.random()*Math.PI*2,
+    });
+  }
+
+  /* ---------- Particles ---------- */
+  function spawnParticles(x, y, n, color, big=false) {
+    for (let i=0;i<n;i++) {
+      state.particles.push({
+        x, y,
+        vx: (Math.random()-0.5)*(big?8:4),
+        vy: (Math.random()-1)*(big?6:3),
+        life: 30 + Math.random()*20,
+        color,
+        size: big ? 3+Math.random()*3 : 2+Math.random()*2,
+      });
+    }
+  }
+
+  /* ---------- Combo display ---------- */
+  function showCombo(text) {
+    comboEl.textContent = text;
+    comboEl.classList.remove('show');
+    void comboEl.offsetWidth;
+    comboEl.classList.add('show');
+  }
+
+  /* ---------- Update ---------- */
+  function update() {
+    state.t++;
+    if (!state.running) return;
+
+    // score from time
+    state.score += 0.5 + state.speed*0.05;
+    scoreEl.textContent = pad(state.score);
+
+    // speed ramp
+    if (state.t % 240 === 0 && state.speed < 9) state.speed += 0.35;
+
+    // skater physics
+    const sk = state.skater;
+    if (!sk.onGround) {
+      sk.vy += GRAVITY;
+      if (state.holding && state.holdFrames < MAX_JUMP_HOLD) {
+        sk.vy += JUMP_HOLD_BOOST;
+        state.holdFrames++;
+      }
+      sk.y += sk.vy;
+      sk.rotation += 0.18;
+      if (sk.y >= GROUND_Y) {
+        sk.y = GROUND_Y;
+        sk.vy = 0;
+        sk.onGround = true;
+        sk.tricking = false;
+        sk.rotation = 0;
+        spawnParticles(sk.x, GROUND_Y+4, 6, '#d4a373');
+      }
+    } else {
+      sk.bobT += 0.25;
+    }
+
+    // skater sways back and forth a tiny bit (he's on the ramp floor)
+    sk.x = 200 + Math.sin(state.t*0.02) * 18;
+
+    // spawn obstacles
+    state.spawnTimer--;
+    if (state.spawnTimer <= 0) {
+      spawnCard();
+      // next spawn — varies with speed
+      const base = 110 - state.speed*5;
+      state.spawnTimer = Math.max(55, base + Math.random()*60);
+      // sometimes double-up
+      if (Math.random() < 0.15 && state.speed > 5.5) {
+        setTimeout(()=>{ if (state.running) spawnCard(); }, 250);
+      }
+    }
+
+    // update obstacles
+    for (let i=state.obstacles.length-1;i>=0;i--) {
+      const o = state.obstacles[i];
+      o.x -= state.speed;
+      o.wobble += 0.15;
+
+      // collision
+      const skLeft = sk.x - 22, skRight = sk.x + 22;
+      const skTop = sk.y - 48, skBottom = sk.y - 4;
+      const oLeft = o.x, oRight = o.x + o.w;
+      const oTop = o.y, oBottom = o.y + o.h;
+      const hit = !(skRight < oLeft + 6 || skLeft > oRight - 6 || skBottom < oTop + 4 || skTop > oBottom - 4);
+      if (hit) { gameOver(); return; }
+
+      // scored
+      if (!o.passed && o.x + o.w < sk.x - 22) {
+        o.passed = true;
+        state.cardsDodged++;
+        state.score += 100;
+        state.combo++;
+        state.comboTimer = 90;
+        sfxScore();
+        if (state.combo >= 3) showCombo('x' + state.combo + ' COMBO!');
+      }
+
+      if (o.x + o.w < -10) state.obstacles.splice(i,1);
+    }
+
+    // combo decays
+    if (state.comboTimer > 0) state.comboTimer--;
+    else state.combo = 0;
+
+    // particles
+    for (let i=state.particles.length-1;i>=0;i--) {
+      const p = state.particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.25;
+      p.life--;
+      if (p.life <= 0) state.particles.splice(i,1);
+    }
+
+    // clouds drift
+    state.clouds.forEach(c => {
+      c.x -= 0.3 * c.s;
+      if (c.x < -80) { c.x = W + 40; c.y = 20+Math.random()*60; c.s = 0.3+Math.random()*0.5; }
+    });
+
+    // shake decay
+    if (state.shake > 0) state.shake--;
+  }
+
+  /* ---------- Drawing helpers ---------- */
+  function drawHalfpipe() {
+    // sky gradient (cyan -> magenta -> yellow Y2K vapor sunset)
+    const sky = ctx.createLinearGradient(0,0,0,H);
+    sky.addColorStop(0, '#000033');
+    sky.addColorStop(0.3, '#4a0080');
+    sky.addColorStop(0.55, '#ff0080');
+    sky.addColorStop(0.75, '#ff8c00');
+    sky.addColorStop(1, '#ffd700');
+    ctx.fillStyle = sky;
+    ctx.fillRect(0,0,W,H);
+
+    // grid floor / synth horizon
+    ctx.save();
+    ctx.strokeStyle = '#ff00ff';
+    ctx.lineWidth = 1;
+    ctx.globalAlpha = 0.6;
+    // horizon line
+    const horizon = 230;
+    // perspective grid receding
+    for (let i=0;i<14;i++) {
+      const t = i/14;
+      const y = horizon + Math.pow(t,2) * 130;
+      ctx.beginPath();
+      ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke();
+    }
+    for (let i=-8;i<=8;i++) {
+      ctx.beginPath();
+      ctx.moveTo(W/2, horizon);
+      ctx.lineTo(W/2 + i*120, H);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // distant sun
+    const sun = ctx.createRadialGradient(W/2, 220, 10, W/2, 220, 90);
+    sun.addColorStop(0,'#ffff00');
+    sun.addColorStop(0.5,'#ff8800');
+    sun.addColorStop(1,'rgba(255,0,128,0)');
+    ctx.fillStyle = sun;
+    ctx.fillRect(W/2-100, 130, 200, 200);
+
+    // stars
+    state.stars.forEach(s => {
+      const a = 0.4 + Math.sin(state.t*0.05 + s.tw)*0.4;
+      ctx.fillStyle = `rgba(255,255,255,${a})`;
+      ctx.fillRect(s.x, s.y, 1, 1);
+    });
+
+    // pixel clouds (8-bit style)
+    state.clouds.forEach(c => drawCloud(c.x, c.y));
+
+    // ============ THE RAMP (halfpipe) ============
+    // Floor (tan wooden surface)
+    const floorGrad = ctx.createLinearGradient(0, 340, 0, H);
+    floorGrad.addColorStop(0, '#e8a25e');
+    floorGrad.addColorStop(1, '#b06a2e');
+    ctx.fillStyle = floorGrad;
+    ctx.fillRect(0, 340, W, 60);
+
+    // floor planks (vertical lines)
+    ctx.strokeStyle = 'rgba(80,40,10,0.5)';
+    ctx.lineWidth = 1;
+    for (let x=0; x<W; x+=40) {
+      ctx.beginPath();
+      ctx.moveTo(x, 340); ctx.lineTo(x, H); ctx.stroke();
+    }
+    // top edge highlight
+    ctx.fillStyle = '#ffd9a0';
+    ctx.fillRect(0, 340, W, 2);
+
+    // Curved ramp walls (left + right) using bezier-like shapes
+    // Left curve
+    ctx.fillStyle = '#1ea7e6';
+    ctx.beginPath();
+    ctx.moveTo(0, 100);
+    ctx.lineTo(0, 360);
+    ctx.lineTo(160, 360);
+    ctx.bezierCurveTo(120, 360, 80, 260, 80, 100);
+    ctx.closePath();
+    ctx.fill();
+    // tan inside of left curve
+    ctx.fillStyle = '#d68240';
+    ctx.beginPath();
+    ctx.moveTo(80, 100);
+    ctx.bezierCurveTo(80, 260, 120, 360, 160, 360);
+    ctx.lineTo(160, 100);
+    ctx.closePath();
+    ctx.fill();
+    // wood lines on left ramp interior
+    ctx.strokeStyle = 'rgba(80,40,10,0.4)';
+    for (let yy=110; yy<360; yy+=22) {
+      ctx.beginPath();
+      const curveX = 80 + Math.pow((yy-100)/260, 2)*80;
+      ctx.moveTo(curveX, yy);
+      ctx.lineTo(160, yy);
+      ctx.stroke();
+    }
+
+    // Right curve (mirrored)
+    ctx.fillStyle = '#1ea7e6';
+    ctx.beginPath();
+    ctx.moveTo(W, 100);
+    ctx.lineTo(W, 360);
+    ctx.lineTo(W-160, 360);
+    ctx.bezierCurveTo(W-120, 360, W-80, 260, W-80, 100);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = '#d68240';
+    ctx.beginPath();
+    ctx.moveTo(W-80, 100);
+    ctx.bezierCurveTo(W-80, 260, W-120, 360, W-160, 360);
+    ctx.lineTo(W-160, 100);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(80,40,10,0.4)';
+    for (let yy=110; yy<360; yy+=22) {
+      ctx.beginPath();
+      const curveX = W - 80 - Math.pow((yy-100)/260, 2)*80;
+      ctx.moveTo(curveX, yy);
+      ctx.lineTo(W-160, yy);
+      ctx.stroke();
+    }
+
+    // Coping (metal lip on top of each ramp)
+    ctx.fillStyle = '#888';
+    ctx.fillRect(70, 96, 20, 8);
+    ctx.fillRect(W-90, 96, 20, 8);
+    ctx.fillStyle = '#ccc';
+    ctx.fillRect(70, 96, 20, 2);
+    ctx.fillRect(W-90, 96, 20, 2);
+
+    // wood scaffolding behind ramps
+    drawScaffold(10, 90);
+    drawScaffold(W-50, 90);
+
+    // shadow on floor under skater
+    const sk = state.skater;
+    const shadowY = 364;
+    const heightAbove = GROUND_Y - sk.y;
+    const shadowScale = Math.max(0.3, 1 - heightAbove/250);
+    ctx.fillStyle = `rgba(0,0,0,${0.4*shadowScale})`;
+    ctx.beginPath();
+    ctx.ellipse(sk.x, shadowY, 26*shadowScale, 6*shadowScale, 0, 0, Math.PI*2);
+    ctx.fill();
+  }
+
+  function drawCloud(x,y) {
+    ctx.fillStyle = 'rgba(255,255,255,0.85)';
+    ctx.fillRect(x, y, 30, 8);
+    ctx.fillRect(x+6, y-4, 22, 4);
+    ctx.fillRect(x+10, y-8, 14, 4);
+    ctx.fillRect(x-4, y+4, 38, 4);
+  }
+
+  function drawScaffold(x, y) {
+    ctx.fillStyle = '#8b5a2b';
+    ctx.fillRect(x, y, 4, 270);
+    ctx.fillRect(x+30, y, 4, 270);
+    for (let i=0; i<6; i++) {
+      ctx.fillRect(x-2, y+i*48, 38, 3);
+    }
+    // diagonal cross-braces
+    ctx.strokeStyle = '#6b4520';
+    ctx.lineWidth = 2;
+    for (let i=0;i<5;i++) {
+      ctx.beginPath();
+      ctx.moveTo(x+2, y+i*48);
+      ctx.lineTo(x+32, y+(i+1)*48);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x+32, y+i*48);
+      ctx.lineTo(x+2, y+(i+1)*48);
+      ctx.stroke();
+    }
+  }
+
+  /* ---------- Tony Hawk pixel sprite ---------- */
+  function drawTony(x, y, rot, tricking, bob) {
+    ctx.save();
+    ctx.translate(x, y - 28);
+    if (tricking) ctx.rotate(rot);
+    const bobY = tricking ? 0 : Math.sin(bob)*1.2;
+    ctx.translate(0, bobY);
+
+    // ---- Skateboard ----
+    // deck
+    ctx.fillStyle = '#2a2a2a';
+    ctx.fillRect(-20, 24, 40, 4);
+    // grip tape stripe
+    ctx.fillStyle = '#ff00ff';
+    ctx.fillRect(-20, 24, 40, 1);
+    // nose / tail curve highlights
+    ctx.fillStyle = '#444';
+    ctx.fillRect(-22, 25, 4, 3);
+    ctx.fillRect(18, 25, 4, 3);
+    // wheels
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(-16, 28, 5, 4);
+    ctx.fillRect(11, 28, 5, 4);
+    ctx.fillStyle = '#000';
+    ctx.fillRect(-15, 29, 3, 2);
+    ctx.fillRect(12, 29, 3, 2);
+
+    // ---- Legs ----
+    // baggy pants (Y2K 2000 cargo style)
+    ctx.fillStyle = '#3a3a4a'; // dark grey-blue cargo
+    ctx.fillRect(-12, 8, 10, 16);
+    ctx.fillRect(2, 8, 10, 16);
+    // knee pads
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(-12, 14, 10, 5);
+    ctx.fillRect(2, 14, 10, 5);
+    ctx.fillStyle = '#ddd';
+    ctx.fillRect(-11, 15, 8, 3);
+    ctx.fillRect(3, 15, 8, 3);
+    // shoes
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(-13, 22, 11, 4);
+    ctx.fillRect(2, 22, 11, 4);
+    ctx.fillStyle = '#000';
+    ctx.fillRect(-13, 25, 11, 1);
+    ctx.fillRect(2, 25, 11, 1);
+
+    // ---- Torso (tan tee like reference) ----
+    ctx.fillStyle = '#c69b6e';
+    ctx.fillRect(-10, -4, 20, 14);
+    // shirt shading
+    ctx.fillStyle = '#a07a4d';
+    ctx.fillRect(-10, 6, 20, 4);
+
+    // ---- Arms outstretched (THPS pose) ----
+    // left arm
+    ctx.fillStyle = '#c69b6e';
+    ctx.fillRect(-22, -2, 12, 4);
+    // right arm
+    ctx.fillRect(10, -2, 12, 4);
+    // elbow pads
+    ctx.fillStyle = '#222';
+    ctx.fillRect(-20, -3, 6, 6);
+    ctx.fillRect(14, -3, 6, 6);
+    // gloves / hands
+    ctx.fillStyle = '#e8c49a';
+    ctx.fillRect(-24, -3, 3, 6);
+    ctx.fillRect(21, -3, 3, 6);
+
+    // ---- Head ----
+    // neck
+    ctx.fillStyle = '#e8c49a';
+    ctx.fillRect(-3, -8, 6, 4);
+    // face
+    ctx.fillStyle = '#e8c49a';
+    ctx.fillRect(-7, -20, 14, 14);
+    // hair (short brown)
+    ctx.fillStyle = '#5a3a1a';
+    ctx.fillRect(-7, -22, 14, 5);
+    ctx.fillRect(-8, -20, 2, 8);
+    ctx.fillRect(6, -20, 2, 8);
+    // eyes
+    ctx.fillStyle = '#000';
+    ctx.fillRect(-4, -14, 2, 2);
+    ctx.fillRect(2, -14, 2, 2);
+    // smirk
+    ctx.fillRect(-3, -9, 5, 1);
+    // sweat drop (he's working)
+    if (Math.sin(state.t * 0.1) > 0.7) {
+      ctx.fillStyle = '#66ddff';
+      ctx.fillRect(7, -16, 1, 2);
+    }
+
+    ctx.restore();
+  }
+
+  /* ---------- Ramp Card sprite ---------- */
+  function drawRampCard(x, y, w, h, wobble) {
+    ctx.save();
+    ctx.translate(x + w/2, y + h/2);
+    ctx.rotate(Math.sin(wobble)*0.04);
+    // shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.4)';
+    ctx.fillRect(-w/2+3, h/2-2, w, 5);
+    // card body (matte black gradient)
+    const grad = ctx.createLinearGradient(-w/2, -h/2, w/2, h/2);
+    grad.addColorStop(0,'#1a1a1a');
+    grad.addColorStop(1,'#000');
+    ctx.fillStyle = grad;
+    ctx.fillRect(-w/2, -h/2, w, h);
+    // subtle border
+    ctx.strokeStyle = '#333';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(-w/2+0.5, -h/2+0.5, w-1, h-1);
+
+    // "ramp" wordmark (yellow)
+    ctx.fillStyle = '#f7d046';
+    ctx.font = 'bold 11px "Arial Black", sans-serif';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('ramp', -w/2 + 5, -h/2 + 8);
+    // little dot
+    ctx.fillStyle = '#f7d046';
+    ctx.beginPath();
+    ctx.arc(-w/2 + 30, -h/2 + 8, 1.2, 0, Math.PI*2);
+    ctx.fill();
+
+    // chip
+    ctx.fillStyle = '#d4af37';
+    ctx.fillRect(-w/2 + 6, -h/2 + 16, 9, 7);
+    ctx.strokeStyle = '#8a6d10';
+    ctx.lineWidth = 0.6;
+    ctx.beginPath();
+    ctx.moveTo(-w/2+6, -h/2+19);
+    ctx.lineTo(-w/2+15, -h/2+19);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(-w/2+10, -h/2+16);
+    ctx.lineTo(-w/2+10, -h/2+23);
+    ctx.stroke();
+
+    // contactless icon
+    ctx.strokeStyle = '#f7d046';
+    ctx.lineWidth = 0.8;
+    for (let i=0;i<3;i++) {
+      ctx.beginPath();
+      ctx.arc(-w/2 + 22, -h/2 + 20, 2+i*1.8, -Math.PI/3, Math.PI/3);
+      ctx.stroke();
+    }
+
+    // card number (faint)
+    ctx.fillStyle = '#666';
+    ctx.font = 'bold 5px "Courier New", monospace';
+    ctx.fillText('•••• 2000', w/2 - 26, h/2 - 6);
+
+    // shine
+    ctx.fillStyle = 'rgba(255,255,255,0.08)';
+    ctx.fillRect(-w/2, -h/2, w, h/3);
+
+    ctx.restore();
+  }
+
+  /* ---------- Particles ---------- */
+  function drawParticles() {
+    state.particles.forEach(p => {
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = Math.min(1, p.life/30);
+      ctx.fillRect(p.x - p.size/2, p.y - p.size/2, p.size, p.size);
+    });
+    ctx.globalAlpha = 1;
+  }
+
+  /* ---------- Render ---------- */
+  function render() {
+    ctx.save();
+    if (state.shake > 0) {
+      ctx.translate((Math.random()-0.5)*state.shake, (Math.random()-0.5)*state.shake);
+    }
+
+    drawHalfpipe();
+
+    // obstacles
+    state.obstacles.forEach(o => drawRampCard(o.x, o.y, o.w, o.h, o.wobble));
+
+    // skater
+    const sk = state.skater;
+    drawTony(sk.x, sk.y, sk.rotation, sk.tricking, sk.bobT);
+
+    drawParticles();
+
+    // speed lines when fast
+    if (state.speed > 6 && state.running) {
+      ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+      ctx.lineWidth = 1;
+      for (let i=0; i<4; i++) {
+        const y = 200 + i*40 + (state.t*state.speed*2 % 40);
+        ctx.beginPath();
+        ctx.moveTo(W, y);
+        ctx.lineTo(W-30, y);
+        ctx.stroke();
+      }
+    }
+
+    ctx.restore();
+
+    // edge vignette
+    const vg = ctx.createRadialGradient(W/2, H/2, H/3, W/2, H/2, H/1.2);
+    vg.addColorStop(0,'rgba(0,0,0,0)');
+    vg.addColorStop(1,'rgba(0,0,0,0.5)');
+    ctx.fillStyle = vg;
+    ctx.fillRect(0,0,W,H);
+  }
+
+  /* ---------- Main loop ---------- */
+  let lastT = performance.now();
+  let frames = 0, fpsT = lastT;
+  function loop(now) {
+    update();
+    render();
+    frames++;
+    if (now - fpsT > 500) {
+      fpsEl.textContent = 'FPS: ' + Math.round(frames*1000/(now-fpsT));
+      frames = 0; fpsT = now;
+    }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+
+  // Auto-start on first canvas click handled above too
+})();
+</script>
+</body>
+</html>
