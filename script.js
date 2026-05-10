@@ -140,50 +140,32 @@ function escapeHtml(s) {
   });
 }
 
-// ============ iPad GIVEAWAY SUBMIT ============
+// ============ PS1 GIVEAWAY SUBMIT ============
+// On submit: show thanks, then redirect to Ramp signup w/ rich UTMs carrying
+// the entrant's role + medium so we can track giveaway-driven signups.
 function submitIpad(e) {
   e.preventDefault();
   var form = document.getElementById('ipad-form');
   var fd = new FormData(form);
-  var intent = fd.get('ramp_intent');
-
-  var payload = {
-    _subject: '\ud83c\udfae NEW PS1 GIVEAWAY ENTRY: ' + (fd.get('name') || ''),
-    name: fd.get('name'),
-    email: fd.get('email'),
-    company: fd.get('company'),
-    role: fd.get('role'),
-    ramp_intent: intent,
-    source: 'ramp2000_ps1_giveaway',
-    submitted_at: new Date().toISOString()
-  };
-
-  // Email to webmaster
-  fetch(FORMSUBMIT_ENDPOINT, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify(payload)
-  }).catch(function () { /* fail silently */ });
 
   // Show thanks
   document.getElementById('ipad-form-wrap').style.display = 'none';
   document.getElementById('ipad-thanks').style.display = 'block';
 
-  // Redirect to Ramp w/ giveaway UTM after 2.5s if they said yes
-  setTimeout(function () {
-    var rampUrl = REFERRAL_BASE + '&utm_source=ramp2000&utm_medium=ps1_giveaway&utm_campaign=y2k_ps1_giveaway';
-    if (intent === 'yes_signup_now') {
-      window.open(rampUrl, '_blank');
-    }
-    // Close modal after a moment
-    setTimeout(function () {
-      document.getElementById('ipad-modal').style.display = 'none';
-      document.getElementById('ipad-form-wrap').style.display = 'block';
-      document.getElementById('ipad-thanks').style.display = 'none';
-      form.reset();
-    }, 1500);
-  }, 2500);
+  // Build Ramp signup URL w/ UTMs that carry their role + entry source
+  var params = new URLSearchParams({
+    rc: '6S7S4B',
+    referral_location: 'referral_page',
+    utm_source: 'ramp2000',
+    utm_medium: 'ps1_giveaway',
+    utm_campaign: 'y2k_ps1_giveaway',
+    utm_content: 'modal_form'
+  });
+  if (fd.get('role')) params.set('utm_term', String(fd.get('role')).toLowerCase().replace(/[^a-z]+/g, '_'));
+  var rampUrl = 'https://ramp.com/?' + params.toString();
 
+  // Redirect after 1.8s so they see the confirmation
+  setTimeout(function () { window.location.href = rampUrl; }, 1800);
   return false;
 }
 
