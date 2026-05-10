@@ -6,7 +6,28 @@
 <title>::: WELCOME TO RAMP.COM ::: The #1 CORPORATE CARD on the World Wide Web!!! :::</title>
 <meta name="keywords" content="ramp,corporate card,expense report,bill pay,small business,internet,information superhighway,best viewed in netscape,frames,cgi-bin">
 <meta name="description" content="Ramp.com -- Your ONE-STOP-SHOP for Corporate Spending on the Information Superhighway! Est. MMXIX">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23ffff00'/%3E%3Ctext x='8' y='12' font-size='12' font-family='Impact' text-anchor='middle' fill='%23ff00ff'%3ER%3C/text%3E%3C/svg%3E">
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="shortcut icon" href="favicon.svg">
+<link rel="apple-touch-icon" href="favicon.svg">
+<meta name="theme-color" content="#ff00ff">
+
+<!-- Open Graph / Slack / iMessage / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RAMP.COM">
+<meta property="og:title" content="::: WELCOME TO RAMP.COM ::: The #1 Corporate Card on the World Wide Web!!! :::">
+<meta property="og:description" content="Your ONE-STOP-SHOP for Corporate Spending on the Information Superhighway. 5% cashback, close books 8x faster, zero annual fee. Est. MMXIX.">
+<meta property="og:image" content="https://kendallhtucker.github.io/ramp2000/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://kendallhtucker.github.io/ramp2000/">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="::: WELCOME TO RAMP.COM ::: The #1 Corporate Card on the WWW!">
+<meta name="twitter:description" content="5% cashback, close books 8x faster, zero annual fee. Best viewed in Netscape Navigator 4.0 at 800x600.">
+<meta name="twitter:image" content="https://kendallhtucker.github.io/ramp2000/img/og.jpg">
 <link rel="stylesheet" href="style.css">
 </head>
 <body bgcolor="#000080" text="#ffffff" link="#ffff00" vlink="#ff00ff" alink="#00ff00" background="">
@@ -67,10 +88,10 @@
 <tr valign="top">
 
 <!-- ============ LEFT SIDEBAR ============ -->
-<td width="180" bgcolor="#008080" class="side-col">
+<td width="180" bgcolor="#008080" class="side-col side-col-left">
 
   <!-- Hit counter -->
-  <div class="side-box" style="background:#000;border:3px ridge #00ff00;">
+  <div class="side-box m-ord-90" style="background:#000;border:3px ridge #00ff00;">
     <font face="Courier New" size="2" color="#00ff00"><b>* VISITOR COUNTER *</b></font><br>
     <div class="hit-counter">
       <span>0</span><span>0</span><span>4</span><span>7</span><span>2</span><span>9</span><span>9</span><span>1</span>
@@ -79,7 +100,7 @@
   </div>
 
   <!-- Net-tech -->
-  <div class="side-box" style="background:#ffff00;border:3px outset #ff8800;">
+  <div class="side-box m-ord-91" style="background:#ffff00;border:3px outset #ff8800;">
     <font face="Impact" size="3" color="#ff0000">&#128293; NET-TECH &#128293;</font>
     <ul class="link-list">
       <li><a href="#cards">&raquo; Corporate Cards</a></li>
@@ -96,7 +117,7 @@
   </div>
 
   <!-- Sign in box -->
-  <div class="side-box" style="background:#000080;border:3px inset #c0c0c0;">
+  <div class="side-box m-ord-92" style="background:#000080;border:3px inset #c0c0c0;">
     <font face="Arial" size="2" color="#ffff00"><b>~*~ MEMBER LOGIN ~*~</b></font>
     <form onsubmit="event.preventDefault();window.open('https://app.ramp.com/sign-in','_blank');">
       <font size="1" color="#ffffff">User ID:</font><br>
@@ -109,7 +130,7 @@
   </div>
 
   <!-- Award images -->
-  <div class="side-box" style="background:#fff;border:3px ridge #ff00ff;text-align:center;">
+  <div class="side-box m-ord-95" style="background:#fff;border:3px ridge #ff00ff;text-align:center;">
     <font face="Times" size="2" color="#000080"><b>WEB AWARDS!</b></font><br>
     <div class="award gold">&#127942;<br><b>COOL<br>SITE<br>OF THE<br>DAY</b></div>
     <div class="award silver">&#11088;<br><b>NETSCAPE<br>WHAT'S<br>HOT!</b></div>
@@ -118,7 +139,7 @@
   </div>
 
   <!-- Browser badges -->
-  <div class="side-box" style="background:#c0c0c0;border:3px outset #fff;text-align:center;">
+  <div class="side-box m-ord-96" style="background:#c0c0c0;border:3px outset #fff;text-align:center;">
     <font face="Arial" size="1" color="#000"><b>BEST VIEWED IN:</b></font><br>
     <div class="browser-badge ns">Netscape&reg;<br>Navigator 4</div>
     <div class="browser-badge ie">M.S.<br>Internet<br>Explorer 5</div>
@@ -648,10 +669,10 @@
 </td>
 
 <!-- ============ RIGHT SIDEBAR ============ -->
-<td width="180" bgcolor="#ff8800" class="side-col">
+<td width="180" bgcolor="#ff8800" class="side-col side-col-right">
 
   <!-- POLL -->
-  <div class="side-box" style="background:#ffffcc;border:3px ridge #ff0000;">
+  <div class="side-box m-ord-50" style="background:#ffffcc;border:3px ridge #ff0000;">
     <font face="Impact" size="3" color="#ff0000">&#9745; WEB-POLL OF THE DAY!</font><br>
     <font face="Arial" size="2" color="#000"><b>How do you submit expense reports?</b></font>
     <form onsubmit="event.preventDefault();document.getElementById('poll-r').style.display='block';">
@@ -673,7 +694,7 @@
   </div>
 
   <!-- PS1 GIVEAWAY (REAL!) -->
-  <a href="ps1.html" style="text-decoration:none;">
+  <a href="ps1.html" style="text-decoration:none;" class="m-ord-15">
   <div class="side-box ad" style="cursor:pointer;">
     <font face="Impact" size="3" color="#ffff00">&#127918; ENTER TO WIN!! &#127918;</font><br>
     <font face="Arial" size="2" color="#fff"><b>FREE Sony&reg;<br>PlayStation&trade;<br>Giveaway!!</b></font><br>
@@ -683,7 +704,7 @@
   </a>
 
   <!-- SISTER SITES (real Ramp products!) -->
-  <div class="side-box" style="background:#fff;border:3px ridge #00aa00;">
+  <div class="side-box m-ord-60" style="background:#fff;border:3px ridge #00aa00;">
     <font face="Impact" size="3" color="#008000">&#127760; OUR SISTER PAGES</font>
     <ul class="link-list dark small">
       <li><a href="https://ramp.com/integrations/quickbooks-online" target="_blank" rel="noopener">&raquo; QuickBooks-Sync.net</a></li>
@@ -698,7 +719,7 @@
   </div>
 
   <!-- DAILY TIP -->
-  <div class="side-box" style="background:#000080;border:3px outset #ffff00;">
+  <div class="side-box m-ord-55" style="background:#000080;border:3px outset #ffff00;">
     <font face="Impact" size="3" color="#ffff00">&#128161; TIP O&apos; THE DAY!</font><br>
     <font face="Arial" size="2" color="#fff">
     Did you know you can <b>text</b> your expense memos to Ramp via <a href="#sms" style="color:#ffff00">SMS</a>? Just send your receipt photo and a short note &mdash; the A.I. handles the rest!
@@ -706,7 +727,7 @@
   </div>
 
   <!-- WEB STICKERS -->
-  <div class="side-box" style="background:#fff;border:3px ridge #000;text-align:center;">
+  <div class="side-box m-ord-97" style="background:#fff;border:3px ridge #000;text-align:center;">
     <font face="Arial" size="1" color="#000"><b>WE SUPPORT:</b></font><br>
     <div class="sticker"><b>HTML 4.01</b><br>VALID&trade;</div>
     <div class="sticker"><b>CSS 1</b><br>VALID</div>
@@ -716,7 +737,7 @@
   </div>
 
   <!-- DIAL UP -->
-  <div class="side-box" style="background:#fff8e0;border:3px ridge #ff8800;">
+  <div class="side-box m-ord-98" style="background:#fff8e0;border:3px ridge #ff8800;">
     <font face="Impact" size="3" color="#ff8800">&#128241; CONNECT-O-METER!</font><br>
     <font face="Courier New" size="1" color="#000">
     Your speed:<br>
