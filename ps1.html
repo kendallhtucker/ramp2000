@@ -279,25 +279,44 @@ function submitPS1(e) {
   var form = document.getElementById('ps1-form');
   var fd = new FormData(form);
 
-  // Log entry via Web3Forms (fire-and-forget; we redirect regardless)
-  var payload = new FormData();
-  payload.append('access_key', WEB3FORMS_KEY);
-  payload.append('subject', '\ud83c\udfae PS1 Giveaway Entry: ' + (fd.get('name') || ''));
-  payload.append('from_name', 'Ramp2000 PS1 Giveaway');
-  payload.append('name', fd.get('name') || '');
-  payload.append('email', fd.get('email') || '');
-  payload.append('company', fd.get('company') || '');
-  payload.append('role', fd.get('role') || '');
-  payload.append('company_size', fd.get('size') || '');
-  payload.append('source', 'ps1_landing_page');
-  payload.append('user_agent', navigator.userAgent || '');
-  payload.append('referrer', document.referrer || '');
+  // Log entry via Web3Forms by POSTing through a hidden iframe (sidesteps CORS).
+  // The iframe never affects this page; the response just lands inside it.
   try {
-    fetch(WEB3FORMS_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      body: payload
+    var iframeName = 'ps1-w3f-' + Date.now();
+    var iframe = document.createElement('iframe');
+    iframe.name = iframeName;
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    var hidden = document.createElement('form');
+    hidden.action = WEB3FORMS_URL;
+    hidden.method = 'POST';
+    hidden.target = iframeName;
+    hidden.enctype = 'multipart/form-data';
+    hidden.style.display = 'none';
+
+    var fields = {
+      access_key: WEB3FORMS_KEY,
+      subject: '\ud83c\udfae PS1 Giveaway Entry: ' + (fd.get('name') || ''),
+      from_name: 'Ramp2000 PS1 Giveaway',
+      name: fd.get('name') || '',
+      email: fd.get('email') || '',
+      company: fd.get('company') || '',
+      role: fd.get('role') || '',
+      company_size: fd.get('size') || '',
+      source: 'ps1_landing_page',
+      user_agent: navigator.userAgent || '',
+      referrer: document.referrer || ''
+    };
+    Object.keys(fields).forEach(function (k) {
+      var input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = k;
+      input.value = fields[k];
+      hidden.appendChild(input);
     });
+    document.body.appendChild(hidden);
+    hidden.submit();
   } catch (err) { /* fail silently — we still redirect */ }
 
   // Show thanks state
