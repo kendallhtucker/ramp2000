@@ -140,34 +140,7 @@ function escapeHtml(s) {
   });
 }
 
-// ============ PS1 GIVEAWAY SUBMIT ============
-// On submit: show thanks, then redirect to Ramp signup w/ rich UTMs carrying
-// the entrant's role + medium so we can track giveaway-driven signups.
-function submitIpad(e) {
-  e.preventDefault();
-  var form = document.getElementById('ipad-form');
-  var fd = new FormData(form);
-
-  // Show thanks
-  document.getElementById('ipad-form-wrap').style.display = 'none';
-  document.getElementById('ipad-thanks').style.display = 'block';
-
-  // Build Ramp signup URL w/ UTMs that carry their role + entry source
-  var params = new URLSearchParams({
-    rc: '6S7S4B',
-    referral_location: 'referral_page',
-    utm_source: 'ramp2000',
-    utm_medium: 'ps1_giveaway',
-    utm_campaign: 'y2k_ps1_giveaway',
-    utm_content: 'modal_form'
-  });
-  if (fd.get('role')) params.set('utm_term', String(fd.get('role')).toLowerCase().replace(/[^a-z]+/g, '_'));
-  var rampUrl = 'https://ramp.com/?' + params.toString();
-
-  // Redirect after 1.8s so they see the confirmation
-  setTimeout(function () { window.location.href = rampUrl; }, 1800);
-  return false;
-}
+// (PS1 giveaway form lives on ps1.html — submit handler is inline there.)
 
 // ============ CHAT-ROOM ============
 function openChat() {

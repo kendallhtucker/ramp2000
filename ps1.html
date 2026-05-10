@@ -270,10 +270,36 @@
 </table>
 
 <script>
+// === CONFIG: paste the Google Apps Script Web App URL here once deployed. ===
+// Until set, submissions still redirect to Ramp — they just won't be logged.
+var SHEET_LOG_URL = 'PASTE_APPS_SCRIPT_URL_HERE';
+
 function submitPS1(e) {
   e.preventDefault();
   var form = document.getElementById('ps1-form');
   var fd = new FormData(form);
+
+  // Log entry to Google Sheet (fire-and-forget; no-cors so redirect isn't blocked)
+  var payload = {
+    name: fd.get('name') || '',
+    email: fd.get('email') || '',
+    company: fd.get('company') || '',
+    role: fd.get('role') || '',
+    size: fd.get('size') || '',
+    source: 'ps1_landing_page',
+    userAgent: navigator.userAgent || '',
+    referrer: document.referrer || ''
+  };
+  if (SHEET_LOG_URL && SHEET_LOG_URL.indexOf('http') === 0) {
+    try {
+      fetch(SHEET_LOG_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+    } catch (err) { /* fail silently — we still redirect */ }
+  }
 
   // Show thanks state
   document.getElementById('ps1-form-wrap').style.display = 'none';

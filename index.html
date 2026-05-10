@@ -590,16 +590,12 @@
   </div>
 
   <!-- PS1 GIVEAWAY (REAL!) -->
-  <div class="side-box ad" onclick="document.getElementById('ipad-modal').style.display='flex';" style="cursor:pointer;">
+  <a href="ps1.html" style="text-decoration:none;">
+  <div class="side-box ad" style="cursor:pointer;">
     <font face="Impact" size="3" color="#ffff00">&#127918; ENTER TO WIN!! &#127918;</font><br>
     <font face="Arial" size="2" color="#fff"><b>FREE Sony&reg;<br>PlayStation&trade;<br>Giveaway!!</b></font><br>
     <font size="1" color="#ffff00"><i>Drawing 6/10/MMXXVI<br>&raquo; CLICK HERE! &laquo;</i></font>
-  </div>
-
-  <a href="ps1.html" style="text-decoration:none;">
-  <div class="side-box ad ad2" style="cursor:pointer;">
-    <font face="Comic Sans MS" size="3" color="#fff"><b>Win a<br>FREE<br>PS1!</b></font>
-    <img src="img/ps1_thumb.jpg" alt="PS1" style="max-width:100%;border:2px solid #fff;margin-top:4px;">
+    <img src="img/ps1_thumb.jpg" alt="Sony PlayStation" style="max-width:100%;border:2px solid #fff;margin-top:8px;background:#fff;">
   </div>
   </a>
 
@@ -680,48 +676,6 @@
 </td></tr>
 </table>
 
-<!-- ============ PS1 GIVEAWAY MODAL ============ -->
-<div id="ipad-modal" class="modal" onclick="if(event.target===this)this.style.display='none';">
-  <div class="modal-box">
-    <div class="modal-header">
-      <span>&#127918; FREE Sony&reg; PlayStation&trade; GIVEAWAY!! &#127918;</span>
-      <a href="#" onclick="event.preventDefault();document.getElementById('ipad-modal').style.display='none';" class="modal-close">[X]</a>
-    </div>
-    <div class="modal-body">
-      <div id="ipad-form-wrap">
-      <font face="Comic Sans MS" size="3" color="#000080"><b>Enter to win a FREE Sony&reg; PlayStation&trade;!!</b></font><br>
-      <font face="Arial" size="2" color="#000">
-      One (1) lucky winner takes home an <b>original Sony PlayStation (PS1) console</b> &mdash; complete w/ controller, A/V cables, and a hand-picked vintage game disc. Drawing held <b>June 10, MMXXVI</b>. &nbsp;
-      <font color="#ff0000"><b>BONUS:</b></font> Each entry is automatically added to the drawing &mdash; and you&apos;ll be taken to Ramp to start a free account in seconds.
-      </font>
-      <form id="ipad-form" onsubmit="return submitIpad(event);">
-        <table border="0" cellpadding="4" class="ipad-table">
-          <tr><td><font size="2"><b>Full Name:</b></font></td><td><input type="text" name="name" required size="30" placeholder="Your name"></td></tr>
-          <tr><td><font size="2"><b>Work E-Mail:</b></font></td><td><input type="email" name="email" required size="30" placeholder="you@yourcompany.com"></td></tr>
-          <tr><td><font size="2"><b>Company:</b></font></td><td><input type="text" name="company" required size="30" placeholder="Acme Corp."></td></tr>
-          <tr><td><font size="2"><b>Role:</b></font></td><td>
-            <select name="role">
-              <option>Founder/CEO</option>
-              <option>Finance/Accounting</option>
-              <option>Operations</option>
-              <option>Other</option>
-            </select>
-          </td></tr>
-
-        </table>
-        <div align="center">
-          <input type="submit" value="  ENTER &amp; SIGN UP FOR RAMP &raquo;  " class="big-submit">
-        </div>
-        <font size="1" color="#666"><i>No purchase necessary. One winner drawn June 10, MMXXVI. Open to U.S. residents 18+. By entering you agree to be contacted by the webmaster. Webmaster will ship one (1) refurbished Sony PlayStation (PS1) console to the winner. Void where prohibited.</i></font>
-      </form>
-      </div>
-      <div id="ipad-thanks" style="display:none;text-align:center;padding:20px;">
-        <font color="#008000" size="5"><b><blink>&#10024; YOU&apos;RE ENTERED!! &#10024;</blink></b></font><br><br>
-        <font face="Arial" size="2" color="#000">Winner announced 6/10/MMXXVI &mdash; start your Crash Bandicoot warm-ups now.<br><br>Taking you to <b>Ramp</b> to finish signing up&hellip;</font>
-      </div>
-    </div>
-  </div>
-</div>
 
 <script src="script.js"></script>
 </body>
