@@ -147,6 +147,91 @@
     <font face="Arial" size="1" color="#000"><i>Page last updated: Tuesday, May 9, MMXXVI &nbsp; &#128197; &nbsp; &copy; Ramp Business Corp.</i></font>
   </div>
 
+  <!-- ============ TONY HAWK FLASH GAME HERO BANNER ============ -->
+  <div onclick="openGameModal()" style="cursor:pointer;margin:14px 0;padding:0;border:5px ridge #ff00ff;background:linear-gradient(135deg,#ff0080 0%,#ff8c00 25%,#ffff00 50%,#00ff80 75%,#00bfff 100%);background-size:200% 200%;animation:y2kPulse 4s ease infinite;box-shadow:0 0 30px #ff00ff, inset 0 0 20px rgba(255,255,255,0.4);position:relative;overflow:hidden;">
+    <style>
+      @keyframes y2kPulse { 0%,100%{background-position:0% 50%;} 50%{background-position:100% 50%;} }
+      @keyframes flashRotate { 0%,100%{transform:rotate(-3deg);} 50%{transform:rotate(3deg);} }
+      @keyframes thpsShake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-2px);} 75%{transform:translateX(2px);} }
+      .thps-flame { position:absolute; font-size:40px; animation:flashRotate 0.6s ease infinite; pointer-events:none; }
+      .thps-title { font-family:Impact,'Arial Black',sans-serif; color:#fff; text-shadow:3px 3px 0 #000, 6px 6px 0 #ff00ff, 9px 9px 0 #00ffff; letter-spacing:2px; line-height:0.95; }
+    </style>
+    <table width="100%" border="0" cellpadding="10" cellspacing="0"><tr>
+      <td width="42%" align="center" style="background:#000;border-right:4px ridge #ff00ff;position:relative;">
+        <!-- Mini-preview pixel-art halfpipe -->
+        <svg viewBox="0 0 200 130" width="100%" style="display:block;" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#000033"/>
+              <stop offset="0.4" stop-color="#4a0080"/>
+              <stop offset="0.7" stop-color="#ff0080"/>
+              <stop offset="1" stop-color="#ffd700"/>
+            </linearGradient>
+            <radialGradient id="sun" cx="0.5" cy="0.8" r="0.5">
+              <stop offset="0" stop-color="#ffff00"/>
+              <stop offset="1" stop-color="#ff0080" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <rect width="200" height="130" fill="url(#sky)"/>
+          <circle cx="100" cy="95" r="35" fill="url(#sun)"/>
+          <!-- Grid -->
+          <g stroke="#ff00ff" stroke-opacity="0.5" stroke-width="0.5">
+            <line x1="0" y1="85" x2="200" y2="85"/>
+            <line x1="0" y1="95" x2="200" y2="95"/>
+            <line x1="0" y1="108" x2="200" y2="108"/>
+            <line x1="100" y1="85" x2="0" y2="130"/>
+            <line x1="100" y1="85" x2="60" y2="130"/>
+            <line x1="100" y1="85" x2="140" y2="130"/>
+            <line x1="100" y1="85" x2="200" y2="130"/>
+          </g>
+          <!-- Halfpipe -->
+          <path d="M 0,35 L 0,108 Q 25,108 30,75 Q 32,55 32,35 Z" fill="#1ea7e6"/>
+          <path d="M 32,35 L 32,75 Q 30,108 50,108 L 150,108 Q 170,108 168,75 L 168,35 Z" fill="#d68240"/>
+          <path d="M 200,35 L 200,108 Q 175,108 170,75 Q 168,55 168,35 Z" fill="#1ea7e6"/>
+          <rect x="0" y="108" width="200" height="22" fill="#b06a2e"/>
+          <!-- Tony pixel skater -->
+          <g transform="translate(95,82)">
+            <rect x="-10" y="14" width="20" height="2" fill="#2a2a2a"/>
+            <rect x="-8" y="16" width="3" height="2" fill="#fff"/>
+            <rect x="5" y="16" width="3" height="2" fill="#fff"/>
+            <rect x="-6" y="4" width="12" height="10" fill="#c69b6e"/>
+            <rect x="-4" y="-6" width="8" height="8" fill="#e8c49a"/>
+            <rect x="-4" y="-7" width="8" height="3" fill="#5a3a1a"/>
+            <rect x="-12" y="5" width="6" height="2" fill="#c69b6e"/>
+            <rect x="6" y="5" width="6" height="2" fill="#c69b6e"/>
+          </g>
+          <!-- Ramp card obstacle -->
+          <g transform="translate(135,93)">
+            <rect x="0" y="0" width="22" height="14" fill="#1a1a1a" stroke="#333"/>
+            <text x="2" y="6" font-family="Arial Black" font-size="5" fill="#f7d046">ramp</text>
+            <rect x="2" y="8" width="4" height="3" fill="#d4af37"/>
+          </g>
+        </svg>
+        <div style="position:absolute;top:6px;left:6px;background:#00ff00;color:#000;font-family:Impact,sans-serif;font-size:10px;padding:2px 5px;border:1px solid #fff;letter-spacing:1px;">&#9679; REC</div>
+        <div style="position:absolute;top:6px;right:6px;background:#ff0000;color:#fff;font-family:Impact,sans-serif;font-size:10px;padding:2px 5px;border:1px solid #fff;letter-spacing:1px;" class="blinking-text">&#127881; FREE!</div>
+      </td>
+      <td align="center" valign="middle" style="padding:8px 14px;">
+        <div class="thps-flame" style="left:-8px;top:6px;">&#128293;</div>
+        <div class="thps-flame" style="right:-8px;top:6px;">&#128293;</div>
+        <div style="font-family:Impact,sans-serif;color:#000;font-size:14px;letter-spacing:2px;text-shadow:1px 1px 0 #fff;">&laquo;&laquo;&laquo; NEW! NEW! NEW! &raquo;&raquo;&raquo;</div>
+        <div class="thps-title" style="font-size:38px;margin:4px 0;">PLAY THE GAME!</div>
+        <div class="thps-title" style="font-size:28px;color:#ffff00;text-shadow:2px 2px 0 #000, 4px 4px 0 #ff00ff;animation:thpsShake 0.4s ease infinite;">TONY HAWK&apos;S<br>RAMP SKATER 2000</div>
+        <div style="background:#000;border:2px inset #fff;margin:8px auto;padding:5px;max-width:280px;text-align:left;">
+          <div style="font-family:'Courier New',monospace;font-size:11px;color:#0f0;text-shadow:0 0 4px #0f0;">C:\&gt; load tonyhawk.swf_</div>
+          <div style="font-family:'Courier New',monospace;font-size:11px;color:#ff0;">&gt; PRESS [SPACE] TO OLLIE</div>
+          <div style="font-family:'Courier New',monospace;font-size:11px;color:#0ff;">&gt; DODGE THE RAMP CARDS!</div>
+          <div style="font-family:'Courier New',monospace;font-size:11px;color:#f0f;">&gt; BEAT THE HI-SCORE!</div>
+        </div>
+        <button type="button" style="background:linear-gradient(180deg,#ffff00,#ff8800);border:4px outset #ffff00;color:#000;font-family:Impact,sans-serif;font-size:26px;padding:8px 30px;cursor:pointer;letter-spacing:3px;text-shadow:1px 1px 0 #fff;box-shadow:4px 4px 0 #000;font-weight:bold;text-transform:uppercase;">&#9654;&#9654; PLAY NOW! &#9654;&#9654;</button>
+        <div style="margin-top:6px;font-family:Arial,sans-serif;font-size:10px;color:#000;"><b>Requires Macromedia&reg; Flash Player 6.0+</b> &middot; 1.2 MB &middot; Free download</div>
+      </td>
+    </tr></table>
+    <!-- Gel-pen disclaimer strip -->
+    <div style="background:#fff;border-top:3px dashed #ff00ff;padding:6px 12px;text-align:center;">
+      <font face="Comic Sans MS, cursive" size="2" color="#0000ee"><i>&#9997;&#65039; <b>p.s.</b> this game is NOT endorsed by, affiliated with, or approved by the 32-year-old boy genius Tony Hawk &mdash; we just think he&apos;s neat. all skateboarding tricks performed by stunt-doubles. no Birdhouses were harmed in the making of this Flash. <b>&#9829; &#9829; &#9829;</b></i></font>
+    </div>
+  </div>
+
   <!-- WHAT IS RAMP? -->
   <table width="100%" border="3" bordercolor="#ff00ff" cellpadding="8" cellspacing="0" class="content-section">
   <tr><td bgcolor="#ffff00"><font face="Impact" size="5" color="#ff0000">&#128640; WHAT IS RAMP.COM??!?</font></td></tr>

@@ -490,7 +490,7 @@
     comboTimer: 0,
     shake: 0,
     skater: {
-      x: 200,
+      x: 400,
       y: GROUND_Y,
       vy: 0,
       onGround: true,
@@ -498,6 +498,9 @@
       bobT: 0,
       rotation: 0,   // for trick rotations mid-air
       tricking: false,
+      sweepT: 0,     // back-and-forth sweep position (0..1)
+      sweepDir: 1,   // 1 right, -1 left
+      tilt: 0,       // body tilt based on curve climb
     },
     obstacles: [],   // ramp cards
     particles: [],
@@ -590,12 +593,16 @@
     state.shake = 0;
     state.obstacles = [];
     state.particles = [];
-    state.skater.x = 200;
+    state.skater.x = 400;
     state.skater.y = GROUND_Y;
     state.skater.vy = 0;
     state.skater.onGround = true;
     state.skater.tricking = false;
     state.skater.rotation = 0;
+    state.skater.sweepT = 0.5;
+    state.skater.sweepDir = 1;
+    state.skater.facing = 1;
+    state.skater.tilt = 0;
     scoreEl.textContent = pad(0);
   }
   function gameOver() {
@@ -620,14 +627,34 @@
   }
 
   /* ---------- Obstacles (Ramp cards) ---------- */
-  function spawnCard() {
+  // The flat floor zone is roughly x=180..620. Cards spawn ahead of Tony in his current
+  // direction, but NOT inside the curve-climb zones (sweepT < 0.2 or > 0.8) where Tony is elevated.
+  function spawnCard(dir) {
+    const sk = state.skater;
+    let spawnX;
+    if (dir === 1) {
+      // Tony heading right; spawn at the FAR end of the flat zone
+      const minX = Math.max(sk.x + 220, 380);
+      const maxX = 560;
+      if (minX > maxX) return;
+      spawnX = minX + Math.random() * (maxX - minX);
+    } else {
+      const minX = 220;
+      const maxX = Math.min(sk.x - 220, 400);
+      if (minX > maxX) return;
+      spawnX = minX + Math.random() * (maxX - minX);
+    }
     state.obstacles.push({
-      x: W + 30,
+      x: spawnX,
       y: GROUND_Y - 22,
       w: 56,
       h: 36,
       passed: false,
       wobble: Math.random()*Math.PI*2,
+      dir: dir,
+      spawnTime: state.t,
+      // Telegraph: card starts as a warning flash, becomes solid after 20 frames
+      telegraphFrames: 20,
     });
   }
 
@@ -683,31 +710,57 @@
         sk.rotation = 0;
         spawnParticles(sk.x, GROUND_Y+4, 6, '#d4a373');
       }
+      // while airborne, drift in current direction
+      sk.x += sk.sweepDir * 0.6;
     } else {
       sk.bobT += 0.25;
     }
 
-    // skater sways back and forth a tiny bit (he's on the ramp floor)
-    sk.x = 200 + Math.sin(state.t*0.02) * 18;
+    // skater skates back and forth across the halfpipe
+    if (sk.onGround) {
+      const sweepSpeed = 0.008 + state.speed * 0.0006;
+      sk.sweepT += sweepSpeed * sk.sweepDir;
+      if (sk.sweepT >= 1) {
+        sk.sweepT = 1; sk.sweepDir = -1; sk.facing = -1;
+        // remove all cards from the old direction (Tony is now heading away from them)
+        state.obstacles = state.obstacles.filter(o => o.dir === -1);
+        state.spawnTimer = 40;
+      }
+      if (sk.sweepT <= 0) {
+        sk.sweepT = 0; sk.sweepDir = 1; sk.facing = 1;
+        state.obstacles = state.obstacles.filter(o => o.dir === 1);
+        state.spawnTimer = 40;
+      }
+      // ease the sweep so he slows at the ramp curves (like real halfpipe physics)
+      const eased = 0.5 - 0.5 * Math.cos(sk.sweepT * Math.PI);
+      // x range: from left curve foot (~180) to right curve foot (~620)
+      sk.x = 180 + eased * 440;
+      // climb up the curve at the edges
+      const edgeDist = Math.min(sk.sweepT, 1 - sk.sweepT); // 0 at edge, 0.5 at center
+      const climb = Math.pow(Math.max(0, 0.18 - edgeDist) / 0.18, 2);
+      sk.y = GROUND_Y - climb * 60;
+      // tilt body as he climbs the curve
+      sk.tilt = climb * 0.45 * (sk.sweepT < 0.5 ? -1 : 1);
+    }
 
-    // spawn obstacles
+    // spawn obstacles in the direction Tony is currently heading
     state.spawnTimer--;
-    if (state.spawnTimer <= 0) {
-      spawnCard();
-      // next spawn — varies with speed
-      const base = 110 - state.speed*5;
-      state.spawnTimer = Math.max(55, base + Math.random()*60);
-      // sometimes double-up
-      if (Math.random() < 0.15 && state.speed > 5.5) {
-        setTimeout(()=>{ if (state.running) spawnCard(); }, 250);
+    if (state.spawnTimer <= 0 && sk.onGround) {
+      // spawn ahead of him so he has to jump
+      spawnCard(sk.sweepDir);
+      const base = 130 - state.speed*5;
+      state.spawnTimer = Math.max(70, base + Math.random()*60);
+      if (Math.random() < 0.12 && state.speed > 5.5) {
+        setTimeout(()=>{ if (state.running) spawnCard(sk.sweepDir); }, 350);
       }
     }
 
-    // update obstacles
+    // update obstacles - they sit still on the floor; Tony moves
+    // (this models the halfpipe correctly: cards are placed obstacles)
     for (let i=state.obstacles.length-1;i>=0;i--) {
       const o = state.obstacles[i];
-      o.x -= state.speed;
       o.wobble += 0.15;
+      if (o.telegraphFrames > 0) { o.telegraphFrames--; continue; } // not solid yet
 
       // collision
       const skLeft = sk.x - 22, skRight = sk.x + 22;
@@ -717,18 +770,28 @@
       const hit = !(skRight < oLeft + 6 || skLeft > oRight - 6 || skBottom < oTop + 4 || skTop > oBottom - 4);
       if (hit) { gameOver(); return; }
 
-      // scored
-      if (!o.passed && o.x + o.w < sk.x - 22) {
-        o.passed = true;
-        state.cardsDodged++;
-        state.score += 100;
-        state.combo++;
-        state.comboTimer = 90;
-        sfxScore();
-        if (state.combo >= 3) showCombo('x' + state.combo + ' COMBO!');
+      // scored - Tony passes the card moving in his current direction
+      // dir=1 means card was spawned ahead while Tony was heading RIGHT, so passed when Tony's right edge is past card's right edge
+      // dir=-1 means card was spawned ahead while Tony was heading LEFT, so passed when Tony's left edge is past card's left edge
+      if (!o.passed) {
+        const passed = (o.dir === 1 && skLeft > oRight - 4) || (o.dir === -1 && skRight < oLeft + 4);
+        if (passed) {
+          o.passed = true;
+          state.cardsDodged++;
+          state.score += 100;
+          state.combo++;
+          state.comboTimer = 90;
+          sfxScore();
+          if (state.combo >= 3) showCombo('x' + state.combo + ' COMBO!');
+          // Fade out passed card after a moment
+          o.fadeStart = state.t;
+        }
       }
 
-      if (o.x + o.w < -10) state.obstacles.splice(i,1);
+      // Remove card after it's been passed for a while, or if it's been on screen too long
+      if (o.passed && state.t - o.fadeStart > 30) state.obstacles.splice(i,1);
+      // safety: remove any card older than 8 seconds (e.g. if Tony changes direction)
+      else if (state.t - o.spawnTime > 480) state.obstacles.splice(i,1);
     }
 
     // combo decays
@@ -894,8 +957,9 @@
     // shadow on floor under skater
     const sk = state.skater;
     const shadowY = 364;
-    const heightAbove = GROUND_Y - sk.y;
-    const shadowScale = Math.max(0.3, 1 - heightAbove/250);
+    // For shadow height, use distance from the actual ground curve (not air jump height)
+    const onGroundHeight = sk.onGround ? 0 : (GROUND_Y - sk.y - (sk.tilt ? 60 : 0));
+    const shadowScale = Math.max(0.3, 1 - onGroundHeight/250);
     ctx.fillStyle = `rgba(0,0,0,${0.4*shadowScale})`;
     ctx.beginPath();
     ctx.ellipse(sk.x, shadowY, 26*shadowScale, 6*shadowScale, 0, 0, Math.PI*2);
@@ -933,10 +997,15 @@
   }
 
   /* ---------- Tony Hawk pixel sprite ---------- */
-  function drawTony(x, y, rot, tricking, bob) {
+  function drawTony(x, y, rot, tricking, bob, facing, tilt) {
     ctx.save();
     ctx.translate(x, y - 28);
-    if (tricking) ctx.rotate(rot);
+    if (tricking) {
+      ctx.rotate(rot);
+    } else {
+      ctx.rotate(tilt || 0);
+    }
+    if (facing === -1) ctx.scale(-1, 1);
     const bobY = tricking ? 0 : Math.sin(bob)*1.2;
     ctx.translate(0, bobY);
 
@@ -1113,23 +1182,49 @@
     drawHalfpipe();
 
     // obstacles
-    state.obstacles.forEach(o => drawRampCard(o.x, o.y, o.w, o.h, o.wobble));
+    state.obstacles.forEach(o => {
+      if (o.telegraphFrames > 0) {
+        // draw warning telegraph: flashing exclamation mark above the spawn spot
+        const flash = Math.floor(state.t / 4) % 2 === 0;
+        ctx.fillStyle = flash ? '#ff0000' : '#ffff00';
+        ctx.font = 'bold 32px "Impact", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 3;
+        ctx.strokeText('!', o.x + o.w/2, o.y - 6);
+        ctx.fillText('!', o.x + o.w/2, o.y - 6);
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'alphabetic';
+        // ghosted card preview
+        ctx.globalAlpha = 0.35;
+        drawRampCard(o.x, o.y, o.w, o.h, o.wobble);
+        ctx.globalAlpha = 1;
+        return;
+      }
+      let alpha = 1;
+      if (o.passed) alpha = Math.max(0, 1 - (state.t - o.fadeStart) / 30);
+      ctx.globalAlpha = alpha;
+      drawRampCard(o.x, o.y, o.w, o.h, o.wobble);
+      ctx.globalAlpha = 1;
+    });
 
     // skater
     const sk = state.skater;
-    drawTony(sk.x, sk.y, sk.rotation, sk.tricking, sk.bobT);
+    drawTony(sk.x, sk.y, sk.rotation, sk.tricking, sk.bobT, sk.facing, sk.tilt);
 
     drawParticles();
 
-    // speed lines when fast
-    if (state.speed > 6 && state.running) {
-      ctx.strokeStyle = 'rgba(255,255,255,0.25)';
-      ctx.lineWidth = 1;
+    // speed lines trailing behind Tony when fast
+    if (state.speed > 5 && state.running && state.skater.onGround) {
+      ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+      ctx.lineWidth = 2;
       for (let i=0; i<4; i++) {
-        const y = 200 + i*40 + (state.t*state.speed*2 % 40);
+        const trailDir = -state.skater.sweepDir;
+        const sx = state.skater.x + trailDir * (20 + i*8);
         ctx.beginPath();
-        ctx.moveTo(W, y);
-        ctx.lineTo(W-30, y);
+        ctx.moveTo(sx, state.skater.y - 20 - i*4);
+        ctx.lineTo(sx + trailDir*12, state.skater.y - 20 - i*4);
         ctx.stroke();
       }
     }
