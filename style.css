@@ -682,3 +682,39 @@ input[type="email"] {
   .nav-btn { font-size: 9px; padding: 3px 1px; }
   .stats-bar font[size="6"] { font-size: 18px !important; }
 }
+
+/* ============================================
+   Y2KMYSITE FOOTBAR — points back to y2kmysite.com
+   so visitors can Y2K-ify their own web-site!
+   ============================================ */
+.y2k-footbar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 9000;
+  background: #000; color: #ffd700;
+  font-family: "Tahoma", sans-serif; font-size: 12px;
+  padding: 6px 10px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 2px solid #ffd700;
+  gap: 10px;
+}
+.y2k-footbar a { color: #ff00ff; font-weight: bold; text-decoration: none; }
+.y2k-footbar a:hover { background: transparent; color: #ffff00; }
+.y2k-footbar .marqcontainer { flex: 1; overflow: hidden; white-space: nowrap; }
+.y2k-footbar .y2k-cta {
+  background: linear-gradient(180deg, #ffff00, #ff8800);
+  color: #000; border: 2px outset #ffff00;
+  padding: 3px 10px; font-weight: bold; font-family: "Tahoma";
+  font-size: 11px; cursor: pointer; text-decoration: none; display: inline-block;
+  white-space: nowrap;
+}
+.y2k-footbar .y2k-cta:hover { background: linear-gradient(180deg, #ffff88, #ffaa00); color: #000; }
+.y2k-footbar .brand { font-family: Impact, sans-serif; color: #ff00ff; }
+
+/* push page content up so footbar doesn't cover footer */
+body { padding-bottom: 36px; }
+
+@media (max-width: 720px) {
+  .y2k-footbar { font-size: 10px; padding: 4px 6px; gap: 6px; }
+  .y2k-footbar .y2k-cta { font-size: 10px; padding: 2px 6px; }
+  .y2k-footbar .brand { font-size: 11px; }
+  body { padding-bottom: 32px; }
+}
